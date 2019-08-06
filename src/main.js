@@ -3,7 +3,7 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 
-import Element from 'element-ui'
+import ElementUI from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/es'
 
 Vue.config.productionTip = false
