@@ -1,19 +1,16 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <dashboard msg="Welcome to Your Vue.js App"/>
+    <router-link :to="{ name:'Dashboard' }">dashboard </router-link>
+    <router-link :to="{ name:'Clinicas' }">clinicas </router-link>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import Dashboard from './components/dashboard.vue'
 
 export default {
-  name: 'app',
-  components: {
-    Dashboard
-  }
-}
+  name: 'app'
+};
 </script>
 
 <style>

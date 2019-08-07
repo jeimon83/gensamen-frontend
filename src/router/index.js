@@ -1,14 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import clinica from 'vue'
-
+import Clinicas from '@/components/clinicas/clinicas'
+import Dashboard from '@/components/dashboard'
 Vue.use(Router)
 const router = new Router({
-    router: [{
-     path: 'clinica',
-     name: 'clinica',
-     component: clinica
-   }]
+  routes: [
+  	{
+  		path: '/',
+     	name: 'Dashboard',
+     	component: Dashboard
+   	},
+  	{
+  		path: '/clinicas',
+     	name: 'Clinicas',
+     	component: Clinicas
+   	}
+  ]
 })
 
 export default router;

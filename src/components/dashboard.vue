@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <router-link :to="{name:'clinica'}">clinica </router-link>
+    <h1>dashboard</h1>
   </div>
 </template>
 
