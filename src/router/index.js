@@ -5,17 +5,17 @@ import Dashboard from '@/components/dashboard'
 Vue.use(Router)
 const router = new Router({
   routes: [
-  	{
-  		path: '/',
-     	name: 'Dashboard',
-     	component: Dashboard
-   	},
-  	{
-  		path: '/clinicas',
-     	name: 'Clinicas',
-     	component: Clinicas
-   	}
-  ]
+		{
+			path: '/',
+			name: 'Dashboard',
+			component: Dashboard
+		},
+		{
+			path: '/clinicas',
+			name: 'Clinicas',
+			component: Clinicas
+		}
+	]
 })
 
 export default router;
