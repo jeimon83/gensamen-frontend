@@ -10,6 +10,7 @@
 					<td>{{ clinica.name }}</td>
 					<td>{{ clinica.beds_available }}</td>
 					<td>{{ clinica.permission }}</td>
+					<td><router-link :to="{ name: 'Clinica', params: { id: clinica.id } }">Ver</router-link></td>
 				</tr>
 			</table>				
 		</el-main>
