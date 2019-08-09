@@ -4,15 +4,31 @@
 			<div class="main-title">Clinicas</div>
 		</el-header>
 		<el-main>
-			<table>
-				<tr v-for="clinica in clinicas" :key="clinica.id">
-					<td>{{ clinica.id }}</td>
-					<td>{{ clinica.name }}</td>
-					<td>{{ clinica.beds_available }}</td>
-					<td>{{ clinica.permission }}</td>
-					<td><router-link :to="{ name: 'Clinica', params: { id: clinica.id } }">Ver</router-link></td>
-				</tr>
-			</table>				
+			<el-table
+	      :data="clinicas"
+	      style="width: 100%">
+	      <el-table-column
+	        prop="id"
+	        label="#">
+	      </el-table-column>
+	      <el-table-column
+	        prop="name"
+	        label="Nombre">
+	      </el-table-column>
+	      <el-table-column
+	        prop="beds_available"
+	        label="camas disponibles">
+	      </el-table-column>
+	       <el-table-column
+	        prop="permission"
+	        label="permission">
+	      </el-table-column>
+	       <el-table-column>
+	       	<template slot-scope="scope">
+	       		<router-link :to="{ name: 'Clinica', params: { id: scope.row.id } }">Ver</router-link>
+	       	</template>
+	      </el-table-column>
+	    </el-table>	
 		</el-main>
   </div>
 </template>
