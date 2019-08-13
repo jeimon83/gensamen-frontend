@@ -1,9 +1,9 @@
 <template>
   <div class="container-wrapper">
 		<el-header>
-			<div class="main-title">
-				<span>Clinica {{ clinica.name }}</span>
-				<a @click="openModal()">Ingresar Paciente</a>
+			<div class="main-title">Clinica {{ clinica.name }}</div>
+			<div class="main-controls">
+				<el-button type="primary" @click="openModal()">Ingresar Paciente</el-button>
 			</div>
 		</el-header>
 		<el-main>
@@ -40,19 +40,42 @@
 	       	</template>
 	      </el-table-column>
 	    </el-table>
+			{{ dialogFormVisible }}
+			<el-dialog title="Shipping address" :visible.sync="dialogFormVisible">
+				<el-form :model="newEntry" label-width="120px">
+					<el-form-item label="Promotion name">
+						<el-input v-model="newEntry.name"></el-input>
+					</el-form-item>
+					<el-form-item label="Zones">
+						<el-select v-model="newEntry.region" style="width: 100%;">
+							<el-option label="Zone No.1" value="shanghai"></el-option>
+							<el-option label="Zone No.2" value="beijing"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-form>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">Cancel</el-button>
+					<el-button type="primary" @click="dialogFormVisible = false">Confirm</el-button>
+				</span>
+			</el-dialog>
 		</el-main>
   </div>
 </template>
 <script>
 export default {
-  name: "clinica",
+  name: "Clinica",
   data() {
     return {
+			dialogFormVisible: false,
+			newEntry: {
+				name: "",
+				region: ""
+			},
       clinica: {
         id: 1,
         name: "casa",
         beds_available: 100,
-        permission: "cualca",
+				permission: "cualca",
         pacientes: [
         	{
         		id: 1,
@@ -64,6 +87,11 @@ export default {
         ]
       }
     }
-  }
+	},
+	methods: {
+		openModal() {
+			this.dialogFormVisible = true;
+		}
+	}
 };
 </script>

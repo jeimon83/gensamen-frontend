@@ -7,7 +7,7 @@
       <el-menu>
         <el-menu-item>
           <router-link :to="{ name:'Dashboard' }" class="el-link el-link--default">
-            <i class="el-icon-school"></i> Dashboard </router-link>
+            <i class="el-icon-s-operation"></i> Dashboard </router-link>
         </el-menu-item>
         <el-menu-item index="2">
           <router-link :to="{ name:'Clinicas' }" class="el-link el-link--default">
@@ -15,7 +15,7 @@
         </el-menu-item>
         <el-menu-item index="3">
           <router-link :to="{ name: 'NuevoPaciente' }" class="el-link el-link--default">
-            nuevo paciente
+            <i class="el-icon-user"></i> Nuevo Paciente
           </router-link>
         </el-menu-item>
       </el-menu>
@@ -55,10 +55,10 @@ html, body {
   height: 100%;
 }
 .el-aside {
-  border-right: solid 1px #e6e6e6;
+  border-right: solid 1px #f1f4f8;
 }
 .el-header, .el-footer {
-  background: #e6e6e6;
+  background: #f1f4f8;
   display: flex;
   align-items: center;
   height: 50px;
@@ -74,12 +74,13 @@ ul.el-menu {
   border-right: none;
 }
 
+.el-header {
+  display: flex !important;
+  justify-content: space-between;
+  padding: 10px 0px;
+}
 /* Global styles */
 .main-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; 
   font-size: 1em;
-  padding: 10px 0px;
 }
 </style>
