@@ -4,6 +4,7 @@ import Clinicas from '@/components/clinicas/clinicas'
 import Dashboard from '@/components/dashboard'
 import Clinica from '@/components/clinicas/clinica'
 import Paciente from '@/components/pacientes/paciente'
+import NuevoPaciente from '@/components/clinicas/nuevoPaciente'
 Vue.use(Router)
 const router = new Router({
     routes: [{
@@ -25,6 +26,11 @@ const router = new Router({
             path: '/paciente/:id',
             name: 'Paciente',
             component: Paciente
+        },
+        {
+            path: '/nuevoPaciente',
+            name: 'NuevoPaciente',
+            component: NuevoPaciente
         }
     ]
 })

@@ -1,7 +1,10 @@
 <template>
   <div class="container-wrapper">
 		<el-header>
-			<div class="main-title">Clinica {{ clinica.name }}</div>
+			<div class="main-title">
+				<span>Clinica {{ clinica.name }}</span>
+				<a @click="openModal()">Ingresar Paciente</a>
+			</div>
 		</el-header>
 		<el-main>
 		  <h3> id: {{ clinica.id }} </h3>
