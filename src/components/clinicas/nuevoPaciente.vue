@@ -22,17 +22,7 @@
                 </el-form-item>
             </el-form>
         </el-main>
-        <el-input type="textarea" :rows="4" placeholder="informe del paciente" v-model="textarea">
-        </el-input>
-        <el-cascader :options="options" clearable>tipo de internacion</el-cascader>
-        <div class="block">
-            <span class="demonstration">fecha de entrada</span>
-            <el-date-picker v-model="value1" type="date" placeholder="fecha">
-            </el-date-picker>
-        </div>
-        <br>
-        <br>
-        <br>
+      </div>
     </div>
 </template>
 <script>

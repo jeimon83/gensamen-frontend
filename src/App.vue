@@ -22,7 +22,15 @@
     </el-aside>
     <el-container>
       <router-view/>
-      <el-footer>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <el-footer class="gensamen">
         Gensamen ® 2019
       </el-footer>
     </el-container>
