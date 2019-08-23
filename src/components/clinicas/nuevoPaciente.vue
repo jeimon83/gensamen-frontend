@@ -18,11 +18,15 @@
                     <el-input placeholder="numero de paciente" v-model="input4" />
                 </el-form-item>
                 <el-form-item>
-                    <el-button>Guardar</el-button>
+                    <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+                        <a-button type="primary" html-type="guardarPaciente">
+                            Submit
+                        </a-button>
+                    </a-form-item>
                 </el-form-item>
             </el-form>
         </el-main>
-      </div>
+    </div>
     </div>
 </template>
 <script>
@@ -51,7 +55,19 @@ export default {
                 }
             }]
         }
+    },
+    methods: {
+    guardarPaciente(e) {
+			e.preventDefault();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+        	extend(this.nuevoPaciente, values.nuevoPaciente)
+          this.agregarPaciente(this.nuevoPaciente);
+					this.$router.push({ name: 'Pacientes' });	
+        }
+      });
     }
+  }
 };
 </script>
 <style>

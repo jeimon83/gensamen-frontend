@@ -5,10 +5,17 @@ import Dashboard from '@/components/dashboard'
 import Clinica from '@/components/clinicas/clinica'
 import Paciente from '@/components/pacientes/paciente'
 import NuevoPaciente from '@/components/clinicas/nuevoPaciente'
+import Login from '@/components/login/login'
 Vue.use(Router)
 const router = new Router({
-    routes: [{
+    routes: [
+    		{
             path: '/',
+            name: 'Login',
+            component: Login
+        },
+        {
+            path: '/dashboard',
             name: 'Dashboard',
             component: Dashboard
         },
