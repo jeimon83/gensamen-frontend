@@ -11,8 +11,11 @@
 
     <el-main>
       <h3> id: {{ clinica.id }} </h3>
-      <h3> camas disponibles: {{ clinica.beds_available }}</h3>
-      <h3> permission: {{ clinica.permission }} </h3>
+      <h3> nombre: {{ clinica.name }}</h3>
+      <h3> cuit: {{ clinica.cuit }} </h3>
+      <h3> habilitacion: {{ clinica.habilitation }} </h3>
+      <h3> camas disponibles (judicial): {{ clinica.beds_judicial }} </h3>
+      <h3> camas disponibles (voluntario): {{ clinica.beds_voluntary }} </h3>
     </el-main>
 
     <el-dialog title="Ingreso de Paciente" :visible.sync="entryVisible">
@@ -88,12 +91,14 @@
   </div>
 </template>
 <script>
+import clinicasApi from "@/services/api/clinicas";
 export default {
     name: "Clinica",
     data() {
         return {
             entryVisible: false,
             informVisible: false,
+            clinicaId: null,
             newEntry: {
                 paciente_id: "",
                 fecha: "",
@@ -107,18 +112,24 @@ export default {
                 comentarios: "",
             },
             clinica: {
-                id: 1,
-                name: "casa",
-                beds_available: 100,
-                permission: "cualca"
+                id: "",
+                name: "",
+                cuit: "",
+                habilitation: "",
+                beds_voluntary: "",
+                beds_judicial: "",
             },
             pacientes: [{
-                id: 1,
-                name: "Carlos Gomez",
-                dni: "12.134.565",
-                numero_de_paciente: "0012-19"
+                id: "",
+                name: "",
+                dni: "",
+                numero_de_paciente: ""
             }]
         }
+    },
+    created() {
+    	this.clinicaId = this.$route.params.id;
+    	this.loadClinica(); 
     },
     methods: {
         openModal() {
@@ -126,6 +137,11 @@ export default {
         },
         openInform() {
         	this.informVisible = true;
+        },
+        loadClinica() {
+        	clinicasApi.getClinica(this.clinicaId).then(response => {
+        		this.clinica = response.data.clinic;
+        	})
         }
     }
 };

@@ -6,25 +6,29 @@
         </el-header>
         <el-dialog title="Ingreso de clinica" :visible.sync="visible">
             <el-form :model="newEntry" label-width="120px">
-                <el-form-item label="clinica">
-                    <el-select v-model="newEntry.clinica">
-                        <el-option v-for="clinica in clinicas" :key="clinica" :label="clinica.name" :value="clinica"></el-option>
-                    </el-select>
+                <el-form-item label="Nombre">
+                    <el-input v-model="newEntry.name"></el-input>
                 </el-form-item>
-                        <el-form-item label="Nombre">
-                            <el-input v-model="clinica.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Camas disponibles">
-                            <el-input v-model="clinica.beds_available"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Permiso">
-                            <el-input v-model="clinica.permission"></el-input>
-                        </el-form-item>
-                    </el-form>
+                <el-form-item label="cuit">
+                    <el-input v-model="newEntry.cuit"></el-input>
+                </el-form-item>
+                <el-form-item label="habilitation">
+                    <el-input v-model="newEntry.habilitation"></el-input>
+                </el-form-item>
+                <el-form-item label="Permiso">
+                    <el-input v-model="newEntry.permission"></el-input>
+                </el-form-item>
+                <el-form-item label="Camas disponibles (voluntario)">
+                <el-input-number v-model="newEntry.beds_voluntary" @change="handleChange" :min="1" :max="500"></el-input-number>
+              </el-form-item>
+              <el-form-item label="Camas disponibles (judicial)">
+                <el-input-number v-model="newEntry.beds_judicial" @change="handleChange" :min="1" :max="500"></el-input-number>
+              </el-form-item>
+            </el-form>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="entryVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="entryVisible = false">Confirm</el-button>
+                <el-button @click="entryVisible = false">Cancelar</el-button>
+                <el-button type="primary" @click="saveEntry()">Guardar</el-button>
             </span>
         </el-dialog>
         <el-main>
@@ -33,9 +37,13 @@
                 </el-table-column>
                 <el-table-column prop="name" label="Nombre">
                 </el-table-column>
-                <el-table-column prop="beds_available" label="camas disponibles">
+                <el-table-column prop="cuit" label="Cuit">
                 </el-table-column>
-                <el-table-column prop="permission" label="permission">
+                <el-table-column prop="habilitation" label="Habilitacion">
+                </el-table-column>
+                <el-table-column prop="beds_judicial" label="Camas disponibles (judicial)">
+                </el-table-column>
+                <el-table-column prop="beds_voluntary" label="Camas disponibles (voluntario)">
                 </el-table-column>
                 <el-table-column>
                     <template slot-scope="scope">
@@ -55,12 +63,14 @@ export default {
         return {
             visible: false,
             clinicas: [],
-            clinica: "",
-             newEntry: {
-            name: "",
-            beds_available: "",
-            permission: ""
-        },
+            num: 1,
+            newEntry: {
+                name: "",
+                cuit: "",
+                habilitation: "",
+                beds_voluntary: "",
+                beds_judicial: "",
+            },
         }
     },
     created() {
@@ -70,13 +80,28 @@ export default {
     methods: {
         loadClinicas() {
             clinicasApi.getClinicas().then(response => {
-            	console.log(response)
+                console.log(response)
                 this.clinicas = response.data.clinics
             })
         },
         openModal() {
             this.visible = true;
+        },
+        saveEntry() {
+            clinicasApi.createClinica(this.newEntry).then(response => {
+                this.clinicas.push(response.data.clinic);
+                this.visible = false;
+                this.newEntry = {
+	                name: "",
+	                cuit: "",
+	                habilitation: "",
+	                beds_voluntary: "",
+	                beds_judicial: "",
+	            };
+            })
+        },
+        handleChange(value) {
+      }
     }
-  }
 };
 </script>

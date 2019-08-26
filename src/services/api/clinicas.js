@@ -4,26 +4,39 @@ axios.defaults.baseURL = "https://gensamen-backend-testing.herokuapp.com/"
 async function getClinicas() {
 	try {
     const response = await axios.get('/clinics');
-    console.log(response);
     return response;
   } catch (error) {
     console.error(error);
+    throw error
   }
 }
 
-async function createClinica() {
+async function getClinica(clinicaId) {
 	try {
-		const responce = await axios.post('/clinicas');
-		console.log(response);
+    const response = await axios.get(`/clinics/${clinicaId}`);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error
+  }
+}
+
+async function createClinica(data) {
+	try {
+		const response = await axios.post('/clinics', { clinic: data });
+		return response;
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
+
 }
 
 async function updateClinica(id, data) {
 	try {
-		const responce = await axios.patch('/clinicas');
+		const response = await axios.patch('/clinicas');
 		console.log(response);
+		return response;
 	} catch (error) {
 		console.error(error);
 	}
@@ -80,5 +93,13 @@ async function updatePacientes(id, data) {
 
 
 export default {
-	getClinicas
+	getClinicas,
+	createClinica,
+	updateClinica,
+	//deleteClinica,
+	getPacientes,
+	createPacientes,
+	updatePacientes,
+	//deletePacientes,
+	getClinica
 }
