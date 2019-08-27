@@ -44,7 +44,7 @@ async function updateClinica(id, data) {
 
 //async function deleteClinica() {
 	//try {
-		//const responce = await axios.get('/clinicas');
+		//const response = await axios.get('/clinicas');
 		//console.log(response);
 	//} catch (error) {
 		//console.error(error);
@@ -53,8 +53,8 @@ async function updateClinica(id, data) {
 
 async function getPacientes() {
 	try {
-		const responce = await axios.get('/Pacientes')
-		console.log(responce);
+		const response = await axios.get('/Patients')
+		console.log(response);
 	} catch (error) {
 		console.error(error);
 	}
@@ -62,8 +62,8 @@ async function getPacientes() {
 
 async function createPacientes() {
 	try {
-		const responce = await axios.post('/Pacientes')
-		console.log(responce);
+		const response = await axios.post('/Patients')
+		console.log(response);
 	} catch (error) {
 		console.error(error);
   }
@@ -71,8 +71,8 @@ async function createPacientes() {
 
 async function updatePacientes(id, data) {
 	try {
-		const responce = await axios.patch('/pacientes')
-		console.log(responce);
+		const response = await axios.patch('/patients')
+		console.log(response);
 	} catch (error) {
 		console.error(error);
 	}
@@ -80,14 +80,30 @@ async function updatePacientes(id, data) {
 
 //async function deletePacientes(id, data) {
 //	try {
-//		const responce = await axios.delete('/pacientes')
-//		console.log(responce);
+//		const response = await axios.delete('/pacientes')
+//		console.log(response);
 //	} catch (error) {
 //		console.error(error);
 //	}
 //}
 
+//async function getUsers(id,data) {
+//	try {
+//		const response = await axios.get('/users')
+//		console.log(response);
+//	} catch (error) {
+//		console.log(error);
+//	}
+//}
 
+//async function createdLogin(id) {
+//	try {
+//		const response = await axios.post('/login')
+//		console.log(response);
+//	} catch (error) {
+//		console.log(error);
+//	}
+//}
 
 
 
