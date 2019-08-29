@@ -12,23 +12,20 @@
                 <el-form-item label="cuit">
                     <el-input v-model="newEntry.cuit"></el-input>
                 </el-form-item>
-                <el-form-item label="habilitation">
+                <el-form-item label="Permiso">
                     <el-input v-model="newEntry.habilitation"></el-input>
                 </el-form-item>
-                <el-form-item label="Permiso">
-                    <el-input v-model="newEntry.permission"></el-input>
-                </el-form-item>
                 <el-form-item label="Camas disponibles (voluntario)">
-                <el-input-number v-model="newEntry.beds_voluntary" @change="handleChange" :min="1" :max="500"></el-input-number>
+                <el-input-number v-model="newEntry.beds_voluntary" :min="1" :max="500"></el-input-number>
               </el-form-item>
               <el-form-item label="Camas disponibles (judicial)">
-                <el-input-number v-model="newEntry.beds_judicial" @change="handleChange" :min="1" :max="500"></el-input-number>
+                <el-input-number v-model="newEntry.beds_judicial" :min="1" :max="500"></el-input-number>
               </el-form-item>
             </el-form>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="entryVisible = false">Cancelar</el-button>
-                <el-button type="primary" @click="saveEntry()">Guardar</el-button>
+                <el-button type="primary" @click="saveClinic()">Guardar</el-button>
             </span>
         </el-dialog>
         <el-main>
@@ -99,9 +96,7 @@ export default {
 	                beds_judicial: "",
 	            };
             })
-        },
-        handleChange(value) {
-      }
+        }
     }
 };
 </script>
