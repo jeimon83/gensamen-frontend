@@ -13,9 +13,10 @@ async function getInternacion(patientId) {
 }
 
 async function createInternacion(patientId, data) {
+	console.log(data.begin_date);
 	try {
 		const response = await axios.post(`/patients/${patientId}/internments`, {
-			internments: data
+			internment: data
 		});
 		return response;
 	} catch (error) {

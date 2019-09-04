@@ -10,7 +10,7 @@
                 <el-form-item label="Paciente">
                     <el-row :gutter="10">
                         <el-col :span="12">
-                            <el-select style="width: 100%;" v-model="newEntry.paciente_id">
+                            <el-select style="width: 100%;" v-model="newEntry.patient_id">
                                 <el-option v-for="paciente in pacientes" :key="paciente.id" :label="getFullName(paciente)" :value="paciente.id">
                                     {{ paciente.firstname }} {{ paciente.lastname }}
                                 </el-option>
@@ -24,23 +24,25 @@
                 <el-row :gutter="10">
                     <el-col :span="12">
                         <el-form-item label="Motivo">
-                            <el-select v-model="newEntry.motivo" style="width: 100%;">
+                            <el-select v-model="newEntry.type" style="width: 100%;">
                                 <el-option label="Judicial" value="judicial"></el-option>
-                                <el-option label="Voluntario" value="vluntario"></el-option>
+                                <el-option label="Voluntario" value="voluntario"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="Fecha">
-                            <el-date-picker v-model="newEntry.fecha" type="date" style="width: 100%;" placeholder="Pick a day">
+                            <el-date-picker
+                            	v-model="newEntry.begin_date"
+                            	type="date"
+                            	style="width: 100%;"
+                            	placeholder="Seleccione fecha de ingreso"
+                            	format="dd/MM/yyyy"
+                            	value-format="MM/dd/yyyy">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-form-item label="comentarios">
-                    <el-input type="textarea" :rows="2" placeholder="Deja tu comentario" v-model="newEntry.comentarios">
-                    </el-input>
-                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="closeModal()">Cancelar</el-button>
@@ -55,10 +57,12 @@
         	@finish="(data) => closeNewPatient(data)" />
     </div>
 </template>
+
 <script>
+import { clone } from "lodash";
 import nuevoPaciente from "@/components/clinicas/nuevoPaciente";
 import pacientesApi from "@/services/api/pacientes";
-import iternacionesApi from "@/services/api/internaciones"
+import internacionesApi from "@/services/api/internaciones"
 export default {
     props: {
         clinicaId: {
@@ -79,14 +83,16 @@ export default {
     data() {
         return {
             newEntry: {
-                paciente_id: "",
-                fecha: "",
-                motivo: "",
-                comentarios: "",
+                patient_id: "",
+                begin_date: "",
+                type: ""
             },
             pacientes: [],
             newPatients: false,
         }
+    },
+    created() {
+    	this.loadPatients();
     },
     methods: {
       loadPatients() {
@@ -95,9 +101,11 @@ export default {
           })
       },
       guardarInternacion() {
-          internacionesApi.createInternacion(this.newEntry.paciente_id, this.newEntry).then(response => {
-              this.$emit('finish', response.data.internment);
-          })
+      	let patientId = clone(this.newEntry.patient_id)
+      	delete this.newEntry.patient_id; 
+        internacionesApi.createInternacion(patientId, this.newEntry).then(response => {
+          this.$emit('finish', response.data.internment);
+	      })
       },
        closeModal() {
       	this.$emit('close');
@@ -107,8 +115,13 @@ export default {
       },
       closeNewPatient(paciente) {
       	this.newPatients = false;
-      	if (paciente)
+      	if (paciente) {
       		this.pacientes.push(paciente);
+      	}
+
+      },
+      getFullName(paciente) {
+      	return `${paciente.firstname} ${paciente.lastname}`;
       }
     }
 };

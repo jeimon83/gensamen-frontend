@@ -17,8 +17,9 @@
       <el-form-item>
       	<el-select placeholder="Genero" v-model="newEntry.gender">
          	<el-option label="Hombre" value="hombre"></el-option>
-        	 <el-option label="Mujer" value="mujer"></el-option>
-      	 </el-select>
+      	  <el-option label="Mujer" value="mujer"></el-option>
+      	  <el-option label="otro" value="otro"></el-option>
+      	</el-select>
       </el-form-item>
       <el-form-item label="Fecha de nacimiento">
 	      <el-date-picker
@@ -40,8 +41,6 @@
 </template>
 <script>
 import pacientesApi from "@/services/api/pacientes";
-import internacionesApi from "@/services/api/internaciones"
-
 export default {
 	props: {
 		clinicId: {
