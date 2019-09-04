@@ -13,11 +13,6 @@
           <router-link :to="{ name:'Clinicas' }" class="el-link el-link--default">
             <i class="el-icon-school"></i> Clinicas </router-link>
         </el-menu-item>
-        <el-menu-item index="3">
-          <router-link :to="{ name: 'NuevoPaciente' }" class="el-link el-link--default">
-            <i class="el-icon-user"></i> Nuevo Paciente
-          </router-link>
-        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>

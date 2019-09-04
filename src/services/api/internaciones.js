@@ -2,9 +2,9 @@ import axios from "axios"
 
 axios.defaults.baseURL = "https://gensamen-backend-testing.herokuapp.com/"
 
-async function getInternacion(clinicId, patientId) {
+async function getInternacion(patientId) {
 	try {
-		const response = await axios.get(`/clinics/${clinicId}/patients/${patientId}/internments`);
+		const response = await axios.get(`/patients/${patientId}/internments`);
     return response;
   } catch (error) {
     console.error(error);
@@ -12,9 +12,11 @@ async function getInternacion(clinicId, patientId) {
 	}
 }
 
-async function createInternacion(clinicId, patientId, data) {
+async function createInternacion(patientId, data) {
 	try {
-		const response = await axios.post(`/clinics/${clinicId}/patients/${patientId}/internments`);
+		const response = await axios.post(`/patients/${patientId}/internments`, {
+			internments: data
+		});
 		return response;
 	} catch (error) {
 		console.error(error);
@@ -22,12 +24,18 @@ async function createInternacion(clinicId, patientId, data) {
 	}
 }
 
-async function updateInternacion(clinicId, patientId, id, data) {
+async function updateInternacion(id, data) {
 	try {
-		const response = await axios.patch(`/clinics/${clinicId}/patients/${patientId}/internments/${id}`);
+		const response = await axios.patch(`/internments/${id}`);
 		console.log(response);
 		return response;
 	} catch (error) {
 		throw error;
 	}
+}
+
+export default {
+	getInternacion,
+	createInternacion,
+	updateInternacion
 }

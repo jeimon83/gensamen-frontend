@@ -24,9 +24,9 @@ async function createPacientes(clinicId, data) {
   }
 }
 
-async function updatePacientes(clinicId, id, data) {
+async function updatePacientes(id, data) {
 	try {
-		const response = await axios.patch(`/clinics/${clinicId}/patients/${id}`)
+		const response = await axios.patch(`/patients/${id}`)
 		console.log(response);
 	} catch (error) {
 		console.error(error);

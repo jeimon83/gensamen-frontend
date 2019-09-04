@@ -4,9 +4,9 @@
     <el-header>
       <div class="main-title">Clinica {{ clinica.name }}</div>
       <div class="main-controls">
-        <el-button type="primary" @click="openModal()">Ingresar Paciente</el-button>
-        <el-button type="primary" @click="openInform()">Ingresar informe</el-button>
-        <el-button type="success" @click="openClinicForm()">Actualizar clinica</el-button>
+        <el-button type="primary" @click="openInternacionModal()">Ingresar Paciente</el-button>
+        <el-button type="primary" @click="openInformeModal()">Solicitar informe</el-button>
+        <el-button type="success" @click="openClinicaModal()">Actualizar clinica</el-button>
       </div>
     </el-header>
 
@@ -19,7 +19,7 @@
       <h3> camas disponibles (voluntario): {{ clinica.beds_voluntary }} </h3>
     </el-main>
 
-    <el-dialog title="Actualizacion de clinica" :visible.sync="openClinicModal">
+    <el-dialog title="Actualizacion de clinica" :visible.sync="showClinicaModal">
       <el-form :model="editClinic" label-width="120px">
         <el-form-item label="Nombre">
             <el-input v-model="editClinic.name"></el-input>
@@ -43,59 +43,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="Ingreso de Paciente" :visible.sync="entryVisible">
-      <el-form :model="newEntry" label-position="top">
-	      <el-form-item label="Paciente">
-	      	<el-row :gutter="10">
-	      		<el-col :span="12">
-			        <el-select style="width: 100%;" v-model="newEntry.paciente_id">
-			          <el-option v-for="paciente in pacientes" :key="paciente.id" :label="getFullName(paciente)" :value="paciente.id">
-			          	{{ paciente.firstname }} {{ paciente.lastname }}
-			          </el-option>
-			        </el-select>
-			      </el-col>
-			      <el-col :span="12">
-	        		<el-button style="float: right;" type="primary" @click="openewPatientForm()">Nuevo Paciente</el-button>
-	        	</el-col>
-	        </el-row>
-	      </el-form-item>
-	      <el-row :gutter="10">
-	      	<el-col :span="12">
-			      <el-form-item label="Motivo">
-			        <el-select v-model="newEntry.motivo" style="width: 100%;">
-			          <el-option label="Judicial" value="judicial"></el-option>
-			          <el-option label="Voluntario" value="vluntario"></el-option>
-			        </el-select>
-			      </el-form-item>
-			    </el-col>
-			    <el-col :span="12">
-			      <el-form-item label="Fecha">
-			        <el-date-picker
-					      v-model="newEntry.fecha"
-					      type="date"
-					      style="width: 100%;"
-					      placeholder="Pick a day">
-					    </el-date-picker>
-			      </el-form-item>
-			    </el-col>
-			  </el-row>
-	      <el-form-item label="comentarios">
-	        <el-input
-					  type="textarea"
-					  :rows="2"
-					  placeholder="Deja tu comentario"
-					  v-model="newEntry.comentarios">
-					</el-input>
-	      </el-form-item>
-	    </el-form>
-	    <span slot="footer" class="dialog-footer">
-	      <el-button @click="entryVisible = false">Cancel</el-button>
-	      <el-button type="primary" @click="entryVisible">Confirm</el-button>
-	    </span>
-	  </el-dialog>
-
-
-	  <el-dialog title="Solicitud de Informe" :visible.sync="informVisible">
+	  <!-- <el-dialog title="Solicitud de Informe" :visible.sync="showInformeModal">
       <el-form :model="newInform" label-width="120px">
 	      <el-form-item label="Paciente">
 	        <el-select v-model="newInform.paciente_id">
@@ -128,39 +76,31 @@
 	      <el-button @click="informVisible = false">Cancel</el-button>
 	      <el-button type="primary" @click="informVisible = false">Confirm</el-button>
 	    </span>
-	  </el-dialog>
+	  </el-dialog> -->
 
-	  <nuevo-paciente
+	  <nueva-internacion
 	  	v-if="clinica.id"
-	  	:clinic-id="clinica.id"
-	  	:show-form="newPatients"
-	  	@close="newPatients = false;"
-	   	@finish="(data) => closeNewPatient(data)"/>
+	  	:clinica-id="clinica.id"
+	  	:open-form="showInternacionModal"
+	  	@close="showInternacionModal = false"
+	  	@finish="(data) => addInternacion(data)"/>
   </div>
 </template>
 <script>
 import clinicasApi from "@/services/api/clinicas";
-import pacienteApi from "@/services/api/pacientes";
 import { clone } from "lodash";
-import nuevoPaciente from "@/components/clinicas/nuevoPaciente"
+import nuevaInternacion from "./nuevaInternacion"; 
 export default {
     name: "Clinica",
     components: {
-    	nuevoPaciente
+    	nuevaInternacion
     },
     data() {
         return {
-            entryVisible: false,
-            informVisible: false,
-            clinicaId: null,
-            openClinicModal: false,
-            newPatients: false,
-            newEntry: {
-                paciente_id: "",
-                fecha: "",
-                motivo: "",
-                comentarios: "",
-            },
+        		clinicaId: null,
+            showInformeModal: false,
+            showClinicaModal: false,
+            showInternacionModal: false,
             newInform: {
                 paciente_id: "",
                 fecha: "",
@@ -175,7 +115,6 @@ export default {
                 beds_voluntary: "",
                 beds_judicial: "",
             },
-            pacientes: [],
             editClinic: {
             	name: "",
             	cuit: "",
@@ -191,11 +130,16 @@ export default {
     	this.loadClinica(); 
     },
     methods: {
-        openModal() {
-            this.entryVisible = true;
+        openInternacionModal() {
+            this.showInternacionModal = true;
         },
-        openInform() {
-        	this.informVisible = true;
+        openInformeModal() {
+        	this.showInformeModal = true;
+        },
+        openClinicaModal() {
+        	this.showClinicaModal = true;
+        	this.editClinic = clone(this.clinica)
+        	delete this.editClinic.id;
         },
         getFullName(paciente) {
         	return `${paciente.firstname} ${paciente.lastname}`;
@@ -203,19 +147,10 @@ export default {
         loadClinica() {
         	clinicasApi.getClinica(this.clinicaId).then(response => {
         		this.clinica = response.data.clinic;
-        		this.loadPatients();
+        		//this.loadPatients();
         	})
         },
-        loadPatients() {
-        	pacienteApi.getPacientes(this.clinicaId).then(response => {
-        		this.pacientes = response.data.patients
-        	})
-        },
-        openClinicForm() {
-        	this.openClinicModal = true;
-        	this.editClinic = clone(this.clinica)
-        	delete this.editClinic.id;
-        },
+        
         saveClinic() {
         	clinicasApi.updateClinica(this.clinica.id, this.editClinic)
         		.then(response => {
@@ -233,17 +168,6 @@ export default {
         		}).finally(() => {
 	        		this.openClinicModal = false;
         		})
-        },
-        openewPatientForm() {
-        	console.log("newPatients", this.newPatients);
-        	this.newPatients = true;
-        },
-        closeNewPatient(paciente) {
-        	this.newPatients = false;
-        	console.log("newPatients", this.newPatients)
-        	console.log("Tenemos paciente?", paciente);
-        	if (paciente)
-        		this.pacientes.push(paciente);
         }
     }
 };

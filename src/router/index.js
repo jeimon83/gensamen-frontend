@@ -4,7 +4,6 @@ import Clinicas from '@/components/clinicas/clinicas'
 import Dashboard from '@/components/dashboard'
 import Clinica from '@/components/clinicas/clinica'
 import Paciente from '@/components/pacientes/paciente'
-import NuevoPaciente from '@/components/clinicas/nuevoPaciente'
 import Login from '@/components/login/login'
 Vue.use(Router)
 const router = new Router({
@@ -34,11 +33,6 @@ const router = new Router({
             name: 'Paciente',
             component: Paciente
         },
-        {
-            path: '/nuevoPaciente',
-            name: 'NuevoPaciente',
-            component: NuevoPaciente
-        }
     ]
 })
 
