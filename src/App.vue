@@ -11,9 +11,6 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
@@ -21,14 +18,17 @@ export default {
 html, body {
   height: 100%;
   margin: 0px;
-  font-family: 'Open Sans';
+  font-family: 'Raleway', sans-serif;
 }
 
 .el-container, .container-wrapper {
   height: 100%;
 }
 .el-aside {
-  border-right: solid 1px #f1f4f8;
+  border-right: solid 1px #ccc;
+}
+.el-header.menu-header {
+  background: #f1f4f8;
 }
 .el-header, .el-footer {
   background: #f1f4f8;

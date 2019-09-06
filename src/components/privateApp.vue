@@ -4,9 +4,9 @@
       <el-header class="menu-header">
         <div class="main-title">Gensamen</div>
       </el-header>
-      <div style="padding: 0px 20px;">
-      	<div>{{ user.first_name }} {{ user.last_name }}</div>
-      	<p>{{ user.email }}</p>
+      <div class="user">
+      	<div class="userData">{{ user.first_name }} {{ user.last_name }}</div>
+      	<p class="userEmail">{{ user.email }}</p>
       </div>
       <el-menu>
         <el-menu-item>
@@ -67,15 +67,27 @@ export default {
 };
 </script>
 
-<style>
-	.app-content {
-		height: 100%;
-		overflow: scroll;
+<style lang="scss">
+.app-content {
+	height: 100%;
+	overflow: scroll;
+}
+.footer-gensamen {
+	position: absolute;
+	bottom: 0px;
+	left: 0;
+	width: 100%;
+}
+.user {
+	padding: 20px;
+	background: #f9f9f9;
+	.userData {
+		font-size: 1em;
+		color: #409EFF; 
 	}
-	.footer-gensamen {
-		position: absolute;
-		bottom: 0px;
-		left: 0;
-		width: 100%;
+	.userEmail {
+		font-size: 0.8em;
+		color: gray;
 	}
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="container-wrapper">
-    <el-header style="position: absolute; top: 0; width: 100%;">
-      <div class="main-title">Clinica {{ clinica.name }}</div>
+    <el-header>
+      <div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a> Clinica {{ clinica.name }}</div>
       <div class="main-controls">
         <el-button type="primary" @click="openInternacionModal()">Ingresar Paciente</el-button>
         <!-- <el-button type="primary" @click="openInformeModal()">Solicitar informe</el-button> -->
@@ -9,12 +9,22 @@
       </div>
     </el-header>
     <el-main style="margin-bottom: 40px;">
-      <h3> id: {{ clinica.id }} </h3>
-      <p> nombre: {{ clinica.name }}</p>
-      <p> cuit: {{ clinica.cuit }} </p>
-      <p> habilitacion: {{ clinica.habilitation }} </p>
-      <p> camas disponibles (judicial): {{ clinica.beds_judicial }} </p>
-      <p> camas disponibles (voluntario): {{ clinica.beds_voluntary }} </p>
+      <div class="clinic-row">
+        <div class="label">CUIT</div>
+        <div class="value">{{ clinica.cuit }} </div>
+      </div>
+      <div class="clinic-row">
+        <div class="label">Nro Habilitacion</div>
+        <div class="value">{{ clinica.habilitation }} </div>
+      </div>
+      <div class="clinic-row">
+        <div class="label">Camas disponibles (judicial)</div>
+        <div class="value">{{ clinica.beds_judicial }} </div>
+      </div>
+      <div class="clinic-row">
+        <div class="label">Camas disponibles (voluntario)</div>
+        <div class="value">{{ clinica.beds_voluntary }} </div>
+      </div>
       <el-divider/>
       <el-table :data="internaciones" style="width: 100%">
         <el-table-column label="Paciente">
@@ -153,6 +163,9 @@ export default {
     this.loadClinica();
   },
   methods: {
+    goBack() {
+      this.$router.push({ name: 'Clinicas'});
+    },
     openInternacionModal() {
       this.showInternacionModal = true;
     },
@@ -230,9 +243,25 @@ export default {
   }
 };
 </script>
-<style>
+<style lang="scss">
 .comment-frame {
     border-radius: 3px;
     margin: 4px 4px 12px 0;
+}
+.clinic-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 1.1em;
+  .label {
+    flex: 2;
+    padding: 5px 0px;
+    font-weight: bold;
+  }
+  .value { 
+    border-bottom: dashed #ddd 1px;
+    flex: 3;
+    padding: 5px 10px;
+  }
 }
 </style>

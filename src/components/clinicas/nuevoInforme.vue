@@ -1,6 +1,6 @@
 <template>
 	<div>
-		 <el-dialog title="Solicitud de Informe" :visible.sync="showInformeModal">
+		<el-dialog title="Solicitud de Informe" :visible.sync="showInformeModal">
       <el-form :model="newInform" label-width="120px">
 	      <el-form-item label="Paciente">
 	        <el-select v-model="newInform.paciente_id">

@@ -1,6 +1,11 @@
 <template>
-  <div class="hello">
-    <h1>dashboard</h1>
+  <div class="container-wrapper">
+    <el-header>
+      <div class="main-title">Dashboard</div>
+    </el-header>
+    <el-main>
+      El dashboard
+    </el-main>
   </div>
 </template>
 
