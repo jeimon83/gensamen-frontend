@@ -1,35 +1,5 @@
 <template>
-  <el-container>
-    <el-aside width="200px">
-      <el-header class="menu-header">
-        <div class="main-title">Gensamen</div>
-      </el-header>
-      <el-menu>
-        <el-menu-item>
-          <router-link :to="{ name:'Dashboard' }" class="el-link el-link--default">
-            <i class="el-icon-s-operation"></i> Dashboard </router-link>
-        </el-menu-item>
-        <el-menu-item index="2">
-          <router-link :to="{ name:'Clinicas' }" class="el-link el-link--default">
-            <i class="el-icon-school"></i> Clinicas </router-link>
-        </el-menu-item>
-      </el-menu>
-    </el-aside>
-    <el-container>
-      <router-view/>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <br>
-      <el-footer class="gensamen">
-        Gensamen ® 2019
-      </el-footer>
-    </el-container>
-  </el-container>
+  <router-view/>
 </template>
 
 <script>

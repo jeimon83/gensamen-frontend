@@ -2,6 +2,16 @@ import axios from "axios"
 
 axios.defaults.baseURL = "https://gensamen-backend-testing.herokuapp.com/"
 
+async function getInternaciones(clinicaId) {
+	try {
+		const response = await axios.get(`/clinics/${clinicaId}/internments`);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error
+	}
+}
+
 async function getInternacion(patientId) {
 	try {
 		const response = await axios.get(`/patients/${patientId}/internments`);
@@ -27,8 +37,9 @@ async function createInternacion(patientId, data) {
 
 async function updateInternacion(id, data) {
 	try {
-		const response = await axios.patch(`/internments/${id}`);
-		console.log(response);
+		const response = await axios.patch(`/internments/${id}`, {
+			internment: data
+		});
 		return response;
 	} catch (error) {
 		throw error;
@@ -38,5 +49,6 @@ async function updateInternacion(id, data) {
 export default {
 	getInternacion,
 	createInternacion,
-	updateInternacion
+	updateInternacion,
+	getInternaciones
 }

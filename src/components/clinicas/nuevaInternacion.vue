@@ -103,6 +103,7 @@ export default {
       guardarInternacion() {
       	let patientId = clone(this.newEntry.patient_id)
       	delete this.newEntry.patient_id; 
+        this.newEntry.begin_date = new Date(this.newEntry.begin_date);
         internacionesApi.createInternacion(patientId, this.newEntry).then(response => {
           this.$emit('finish', response.data.internment);
 	      })

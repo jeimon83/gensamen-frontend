@@ -38,9 +38,9 @@
                 </el-table-column>
                 <el-table-column prop="habilitation" label="Habilitacion">
                 </el-table-column>
-                <el-table-column prop="beds_judicial" label="Camas disponibles (judicial)">
+                <el-table-column prop="beds_judicial" label="Camas (judicial)">
                 </el-table-column>
-                <el-table-column prop="beds_voluntary" label="Camas disponibles (voluntario)">
+                <el-table-column prop="beds_voluntary" label="Camas (voluntario)">
                 </el-table-column>
                 <el-table-column>
                     <template slot-scope="scope">
