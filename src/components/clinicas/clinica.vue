@@ -4,7 +4,7 @@
       <div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a> Clinica {{ clinica.name }}</div>
       <div class="main-controls">
         <el-button type="primary" @click="openInternacionModal()">Ingresar Paciente</el-button>
-        <!-- <el-button type="primary" @click="openInformeModal()">Solicitar informe</el-button> -->
+        <el-button type="primary" @click="openInformeModal()">Solicitar informe</el-button>
         <el-button type="success" @click="openClinicaModal()">Actualizar clinica</el-button>
       </div>
     </el-header>

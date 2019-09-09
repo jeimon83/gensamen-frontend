@@ -6,6 +6,7 @@ import Clinica from '@/components/clinicas/clinica'
 import Paciente from '@/components/pacientes/paciente'
 import Login from '@/components/login/login'
 import PrivateApp from '@/components/privateApp'
+import User from '@/components/perfilUser/user'
 
 Vue.use(Router)
 
@@ -40,6 +41,11 @@ const router = new Router({
           path: '/paciente/:id',
           name: 'Paciente',
           component: Paciente
+        },
+        {
+          path: '/user',
+          name: 'UserProfile',
+          component: User
         }
       ]
     }

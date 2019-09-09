@@ -5,7 +5,7 @@
         <div class="main-title">Gensamen</div>
       </el-header>
       <div class="user">
-      	<div class="userData">{{ user.first_name }} {{ user.last_name }}</div>
+      	<router-link :to="{ name: 'UserProfile' }"><div class="userData">{{ user.first_name }} {{ user.last_name }}</div></router-link>
       	<p class="userEmail">{{ user.email }}</p>
       </div>
       <el-menu>
@@ -41,6 +41,7 @@ export default {
 	name: 'PrivateApp',
 	data() {
 		return {
+			showPerfil: false,
 			user: {
 				email: "",
 				first_name: "",
@@ -62,6 +63,9 @@ export default {
 			localStorage.removeItem('token');
 			localStorage.removeItem('user')
 			this.$router.push('/login');
+		},
+		perfil() {
+			this.showPerfil = true;
 		}
 	}
 };
