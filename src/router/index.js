@@ -7,7 +7,7 @@ import Paciente from '@/components/pacientes/paciente'
 import Login from '@/components/login/login'
 import PrivateApp from '@/components/privateApp'
 import User from '@/components/perfilUser/user'
-
+import ClinicaPacientes from "@/components/pacientes/listado";
 Vue.use(Router)
 
 const router = new Router({
@@ -31,6 +31,11 @@ const router = new Router({
           path: '/clinicas',
           name: 'Clinicas',
           component: Clinicas
+        },
+        {
+          path: '/clinica/:id/pacientes',
+          name: 'ClinicaPacientes',
+          component: ClinicaPacientes
         },
         {
           path: '/clinica/:id',

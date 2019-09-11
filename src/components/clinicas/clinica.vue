@@ -4,7 +4,9 @@
       <div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a> Clinica {{ clinica.name }}</div>
       <div class="main-controls">
         <el-button type="primary" @click="openInternacionModal()">Ingresar Paciente</el-button>
-        <el-button type="primary" @click="openInformeModal()">Solicitar informe</el-button>
+        <router-link class="el-button el-button--primary" style="text-decoration: none;" :to="{ name: 'ClinicaPacientes', params: { id: clinica.id } }">
+          Pacientes
+        </router-link>
         <el-button type="success" @click="openClinicaModal()">Actualizar clinica</el-button>
       </div>
     </el-header>
@@ -37,7 +39,9 @@
         <el-table-column prop="end_date" label="Fin" />
         <el-table-column>
           <template slot-scope="scope">
-            <a @click="openEditInternacionModal(scope.row)">ver/actualizar</a>
+            <a>ver</a><br>
+            <a @click="openEditInternacionModal(scope.row)">actualizar</a><br>
+            <a @click="openNewContactModal(scope.row)">nuevo contacto</a>
           </template>
         </el-table-column>
       </el-table>
@@ -77,6 +81,20 @@
       	:open-form="showInternacionModal"
       	@close="showInternacionModal = false"
       	@finish="(data) => addInternacion(data)"/>
+
+      <nuevo-contacto
+        v-if="paciente.id"
+        :paciente-id="paciente.id"
+        :open-form="showNewContactModal"
+        @close="showNewContactModal = false"
+        @finish="(data) => addContact(data)"/>
+
+      <!-- <nuevo-informe
+        v-if="clinica.id"
+        :clinica-id="clinica.id"
+        :open-form="showInformeModal"
+        @close="showInformeModal = false"
+        @finish="(data) => addInforme(data)"/> -->
       
       <el-dialog 
         title="Actualizar Internacion"
@@ -122,18 +140,21 @@
 import clinicasApi from "@/services/api/clinicas";
 import { clone } from "lodash";
 import nuevaInternacion from "./nuevaInternacion";
-import internacionesApi from "@/services/api/internaciones"
+import internacionesApi from "@/services/api/internaciones";
+import nuevoInforme from "./nuevoInforme";
+import nuevoContacto from "@/components/pacientes/nuevoContacto";
 export default {
   name: "Clinica",
-  components: { nuevaInternacion },
+  components: { nuevaInternacion, nuevoInforme,nuevoContacto },
   data() {
     return {
       clinicaId: null,
       showClinicaModal: false,
       showInternacionModal: false,
       showInternaciones: false,
-      showInformeModal: false,
+      showVerPacientes: false,
       showInternacion: false,
+      showNewContactModal: false,
       clinica: {
           id: "",
           name: "",
@@ -155,7 +176,8 @@ export default {
         type: "",
         end_date: "",
         begin_date: ""
-      }
+      },
+      paciente: {}
     }
   },
   created() {
@@ -166,11 +188,15 @@ export default {
     goBack() {
       this.$router.push({ name: 'Clinicas'});
     },
+     openNewContactModal(internacion) {
+      this.paciente = clone(internacion.patient)
+      this.showNewContactModal = true;
+    },
     openInternacionModal() {
       this.showInternacionModal = true;
     },
-    openInformeModal() {
-      this.showInformeModal = true;
+    openVerPacientes() {
+      this.showVerPacientes = true;
     },
     openClinicaModal() {
       this.showClinicaModal = true;
@@ -239,6 +265,11 @@ export default {
         this.loadInternaciones();
         this.showInternacion = false;
       })
+    },
+    addContact(contacto) {
+      console.log(contacto);
+      this.paciente = {};
+      this.showNewContactModal = false;
     }
   }
 };

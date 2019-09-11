@@ -39,17 +39,18 @@
 
 <script>
 import { clone } from "lodash";
-      data() {
-		   	return {
-					newInform: {
-              paciente_id: "",
-              fecha: "",
-         	    motivo: "",
-              comentarios: "",
-            },
-				}
-		};
-
+export default {
+      		data() {
+		   			return {
+							newInform: {
+              	paciente_id: "",
+              	fecha: "",
+         	    	motivo: "",
+              	comentarios: "",
+            	},
+					}
+			}
+	};
 
 
 

@@ -96,7 +96,13 @@ export default {
 	                beds_judicial: "",
 	            };
             })
-        }
+        },
+        saveClinic() {
+      clinicasApi.updateClinica(this.clinica.id, this.editClinic)
+        .then(response => {
+          this.clinica = response.data.clinic;
+        })
+      },
     }
 };
 </script>
