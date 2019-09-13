@@ -180,6 +180,14 @@ export default {
     },
     closeModal() {
       this.showOpenContactModal = false;
+      this.contacto = {
+        paciente_id: "",
+        firstname: "",
+        lastname: "",
+        phone: "",
+        document_number: "",
+        relationship: ""
+      }
     },
     goBack() {
       this.$router.push({ name: 'Clinica'});
@@ -194,6 +202,14 @@ export default {
       contactApi.createContact(this.currentPaciente.id, this.contacto).then(response => {
         // this.currentPaciente.contacts.push(response.data.contact);
         this.showOpenContactModal = false;
+        this.contacto = {
+          paciente_id: "",
+          firstname: "",
+          lastname: "",
+          phone: "",
+          document_number: "",
+          relationship: ""
+        }
       })
     }
   }
