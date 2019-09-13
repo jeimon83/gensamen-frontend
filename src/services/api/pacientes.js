@@ -24,10 +24,10 @@ async function createPacientes(clinicId, data) {
   }
 }
 
-async function updatePacientes(id, data) {
+async function updatePaciente(id, data) {
 	try {
-		const response = await axios.patch(`/patients/${id}`)
-		console.log(response);
+		const response = await axios.patch(`/patients/${id}`, { patient: data })
+		return response;
 	} catch (error) {
 		console.error(error);
 	}
@@ -44,6 +44,6 @@ async function updatePacientes(id, data) {
 export default {
 	getPacientes,
 	createPacientes,
-	updatePacientes,
+	updatePaciente,
 	//deletePacientes
 } 

@@ -44,7 +44,7 @@ import pacientesApi from "@/services/api/pacientes";
 export default {
 	props: {
 		clinicId: {
-			type: Number,
+			type: Number|String,
 			required: true
 		},
 		showForm: {
