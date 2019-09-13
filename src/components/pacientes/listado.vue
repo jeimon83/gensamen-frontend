@@ -13,7 +13,13 @@
         <el-table-column prop="birth_date" label="fecha de nacimiento" />
         <el-table-column>
           <template slot-scope="scope">
-            <a @click="openEditPacienteModal(scope.row)">actualizar</a><br>
+            <a @click="openEditPacienteModal(scope.row)">Actualizar</a><br>
+          </template>
+        </el-table-column>
+        <el-table-column>
+          <template slot-scope="scope">
+            <a>ver</a><br>
+            <a @click="openContactModal(scope.row)">Contactos</a>
           </template>
         </el-table-column>
       </el-table>
@@ -56,6 +62,42 @@
         </span>
     </el-dialog>
 
+  <el-dialog
+    title="Nuevo Contacto"
+    :visible.sync="showOpenContactModal"
+    :show-close="false"
+    :close-on-press-escape="false"
+    :close-on-click-modal="false">
+      <el-form :model="contacto" label-width="120px">
+        <el-form-item label="Nombre">
+            <el-input v-model="contacto.firstname"></el-input>
+        </el-form-item>
+        <el-form-item label="Apellido">
+            <el-input v-model="contacto.lastname"></el-input>
+        </el-form-item>
+        <el-form-item label="Telefono">
+            <el-input v-model="contacto.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="DNI">
+            <el-input v-model="contacto.document_number"></el-input>
+        </el-form-item>
+       <el-form-item label="Relacion">
+        <el-select v-model="contacto.relationship" clearable filterable style="width: 100%;">
+          <el-option value="padre">Padre</el-option>
+          <el-option value="madre">Madre</el-option>
+          <el-option value="hijo">Hijo/a</el-option>
+          <el-option value="hermano">Hermano/a</el-option>
+          <el-option value="tutor">Tutor/a</el-option>
+          <el-option value="conyuge">Conyuge</el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeModal()">Cancelar</el-button>
+        <el-button type="primary" @click="saveContact">Guardar</el-button>
+      </span>
+  </el-dialog>
+
     <nuevo-paciente 
       v-if="clinicaId" 
       :clinic-id="clinicaId" 
@@ -67,21 +109,14 @@
 <script>
 import pacientesApi from '@/services/api/pacientes';
 import nuevoPaciente from '@/components/clinicas/nuevoPaciente';
+import contactApi from '@/services/api/contact'
 import { clone } from "lodash";
 export default {
   name: 'listadoPacientes',
   components: {
     nuevoPaciente
   },
-  props: {
-    openForm: {
-      type: Boolean,
-      required: false,
-      default: () => {
-         return false;
-      }
-    }
-  },
+
   data() {
     return {
       pacientes: [],
@@ -89,12 +124,21 @@ export default {
       clinicaId: null,
       newPatients: false,
       showPaciente: false,
+      showOpenContactModal: false,
       copyPaciente: {
         firstname: "",
         lastname: "",
         document_number: "",
         gender: "",
         birth_date: ""
+      },
+      contacto: {
+        paciente_id: "",
+        firstname: "",
+        lastname: "",
+        phone: "",
+        document_number: "",
+        relationship: ""
       }
     }
   },
@@ -135,11 +179,23 @@ export default {
       return `${paciente.firstname} ${paciente.lastname}`;
     },
     closeModal() {
-      this.$emit('close');
+      this.showOpenContactModal = false;
     },
     goBack() {
       this.$router.push({ name: 'Clinica'});
     },
+    openContactModal(paciente) {
+      this.showOpenContactModal = true;
+      this.currentPaciente = paciente;
+    },
+    saveContact() {
+      this.contacto.paciente_id = this.currentPaciente.id;
+
+      contactApi.createContact(this.currentPaciente.id, this.contacto).then(response => {
+        // this.currentPaciente.contacts.push(response.data.contact);
+        this.showOpenContactModal = false;
+      })
+    }
   }
 };
 </script>
