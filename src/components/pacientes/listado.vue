@@ -13,13 +13,13 @@
         <el-table-column prop="birth_date" label="fecha de nacimiento" />
         <el-table-column>
           <template slot-scope="scope">
-            <a @click="openEditPacienteModal(scope.row)">Actualizar</a><br>
+            <a @click="openEditPacienteModal(scope.row)" style="color: green">Actualizar</a><br>
           </template>
         </el-table-column>
         <el-table-column>
           <template slot-scope="scope">
-            <a>ver</a><br>
-            <a @click="openContactModal(scope.row)">Contactos</a>
+            <router-link :to="{ name: 'Paciente', params: { id: scope.row.id } }" style="color: blue;">ver</router-link><br>
+            <a @click="openContactModal(scope.row)" style="color: blue">Contactos</a>
           </template>
         </el-table-column>
       </el-table>

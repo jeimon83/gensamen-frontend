@@ -33,6 +33,16 @@ async function updatePaciente(id, data) {
 	}
 }
 
+async function getPaciente(pacienteId) {
+	try {
+		const response = await axios.get(`/patients/${pacienteId}`)
+		console.log(response);
+		return response;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 //async function deletePacientes(id, data) {
 //	try {
 //		const response = await axios.delete('/pacientes')
@@ -45,5 +55,6 @@ export default {
 	getPacientes,
 	createPacientes,
 	updatePaciente,
+	getPaciente
 	//deletePacientes
 } 
