@@ -1,5 +1,5 @@
 <template>
-  <div class="login-page">
+  <div class="login-page" v-loading="loading">
     <h3>Bienvenido a Gensamen</h3>
     <el-container>
       <el-form :model="form" :rules="rules" ref="loginForm" style="width: 60%; margin: auto;">
@@ -21,6 +21,7 @@ import userApi from "@/services/api/users"
 export default {
   data() {
     return {
+      loading: false,
       form: {
         email: "",
         password: ""
@@ -37,6 +38,7 @@ export default {
   },
   methods: {
     submitForm() {
+      this.loading = true;
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           userApi.login(this.form.email, this.form.password).then(response => {
@@ -46,7 +48,11 @@ export default {
           console.log('error submit!!');
           return false;
         }
-      });
+      }).catch(error => {
+          console.log("Error cargando internaciones", error);
+        }).finally(() => {
+          this.loading = false;
+        });
    },
     resetForm(formEmail) {
       this.$refs[formEmail].resetFields();

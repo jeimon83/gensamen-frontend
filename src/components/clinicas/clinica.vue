@@ -1,5 +1,5 @@
 <template>
-  <div class="container-wrapper">
+  <div class="container-wrapper" v-loading="loading">
     <el-header>
       <div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a> Clinica {{ clinica.name }}</div>
       <div class="main-controls">
@@ -28,7 +28,7 @@
         <div class="value">{{ clinica.beds_voluntary }} </div>
       </div>
       <el-divider/>
-      <el-table :data="internaciones" style="width: 100%">
+      <el-table :data="internaciones" style="width: 100%" v-loading="loading">
         <el-table-column label="Paciente">
           <template slot-scope="scope">
             {{ scope.row.patient.firstname }} {{ scope.row.patient.lastname }}
@@ -158,6 +158,7 @@ export default {
       showVerPacientes: false,
       showInternacion: false,
       showNewContactModal: false,
+      loading: false,
       clinica: {
           id: "",
           name: "",
@@ -207,10 +208,15 @@ export default {
       delete this.editClinic.id;
     },
     loadClinica() {
+      this.loading = true;
       clinicasApi.getClinica(this.clinicaId).then(response => {
         this.clinica = response.data.clinic;
         this.loadInternaciones();
-      });
+      }).catch(error => {
+          console.log("Error cargando clinica", error);
+        }).finally(() => {
+          this.loading = false;
+        });
     },
     addInternacion(internacion) {
       this.showInternacionModal = false;
@@ -241,9 +247,14 @@ export default {
       this.editClinic = {};
     },
     loadInternaciones() {
+      this.loading = true;
       internacionesApi.getInternaciones(this.clinicaId).then(response => {
         this.internaciones = response.data.internments;
-      });
+      }).catch(error => {
+          console.log("Error cargando internaciones", error);
+        }).finally(() => {
+          this.loading = false;
+          })
     },
     openEditInternacionModal(internacion) {
       this.copyInternacion = clone(internacion)

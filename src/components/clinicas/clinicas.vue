@@ -2,10 +2,13 @@
   <div class="container-wrapper">
     <el-header>
       <div class="main-title">Clinicas</div>
-      <el-button type="primary" @click="openModal()">Ingresar clinica</el-button>
+      <div>
+        <el-button type="primary" size="small" @click="openModal()">Ingresar clinica</el-button>
+        <el-button type="primary" size="small" @click="loadClinicas()">Recargar</el-button>
+      </div>
     </el-header>
     <el-main style="margin-bottom: 40px;">
-      <el-table :data="clinicas" style="width: 100%">
+      <el-table :data="clinicas" style="width: 100%" v-loading="loading">
         <el-table-column prop="id" label="#">
         </el-table-column>
         <el-table-column prop="name" label="Nombre">
@@ -60,6 +63,7 @@ export default {
         return {
             visible: false,
             clinicas: [],
+            loading: false,
             num: 1,
             newEntry: {
                 name: "",
@@ -71,32 +75,35 @@ export default {
         }
     },
     created() {
-        console.log(clinicasApi)
-        this.loadClinicas()
+      this.loadClinicas()
     },
     methods: {
-        loadClinicas() {
-            clinicasApi.getClinicas().then(response => {
-                console.log(response)
-                this.clinicas = response.data.clinics
-            })
-        },
-        openModal() {
-            this.visible = true;
-        },
-        saveEntry() {
-            clinicasApi.createClinica(this.newEntry).then(response => {
-                this.clinicas.push(response.data.clinic);
-                this.visible = false;
-                this.newEntry = {
-	                name: "",
-	                cuit: "",
-	                habilitation: "",
-	                beds_voluntary: "",
-	                beds_judicial: "",
-	            };
-            })
-        },
+      loadClinicas() {
+        this.loading = true;
+        clinicasApi.getClinicas().then(response => {
+          this.clinicas = response.data.clinics;
+        }).catch(error => {
+          console.log("Error cargando clinicas", error);
+        }).finally(() => {
+          this.loading = false;
+        })
+      },
+      openModal() {
+          this.visible = true;
+      },
+      saveEntry() {
+        clinicasApi.createClinica(this.newEntry).then(response => {
+          this.clinicas.push(response.data.clinic);
+          this.visible = false;
+          this.newEntry = {
+            name: "",
+            cuit: "",
+            habilitation: "",
+            beds_voluntary: "",
+            beds_judicial: "",
+          };
+        })
+      },
         saveClinic() {
       clinicasApi.updateClinica(this.clinica.id, this.editClinic)
         .then(response => {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-header>
       <div><a @click="goBack()"><i class="el-icon-back"></i></a>Pacientes</div>
       <el-button type="primary" @click="openNewPatientForm()">Nuevo Paciente</el-button>
@@ -125,6 +125,7 @@ export default {
       newPatients: false,
       showPaciente: false,
       showOpenContactModal: false,
+      loading: false,
       copyPaciente: {
         firstname: "",
         lastname: "",
@@ -148,9 +149,14 @@ export default {
   },
   methods: {
     loadListadoPacientes() {
+      this.loading = true;
       pacientesApi.getPacientes(this.clinicaId).then(response => {
         this.pacientes = response.data.patients;
-      })
+      }).catch(error => {
+          console.log("Error cargando pacientes", error);
+        }).finally(() => {
+          this.loading = false;
+        });
     },
     closeNewPatient(paciente) {
       this.newPatients = false;
