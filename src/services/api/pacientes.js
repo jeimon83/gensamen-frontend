@@ -51,6 +51,19 @@ async function getPaciente(pacienteId) {
 //		console.error(error);
 //	}
 //}
+
+// async function createReportesPacientes(pacienteId, data) {
+// 	try {
+// 		const response = await axios.post(`/clinics/${clinicId}/patients`, {
+// 			patient: data
+// 		})
+// 		console.log(response);
+// 		return response;
+// 	} catch (error) {
+// 		console.error(error);
+//   }
+// } 
+
 export default {
 	getPacientes,
 	createPacientes,

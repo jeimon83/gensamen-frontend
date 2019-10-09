@@ -49,7 +49,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="entryVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="saveClinic()">Guardar</el-button>
+        <el-button type="primary" @click="saveEntry()">Guardar</el-button>
       </span>
     </el-dialog>        
   </div>
@@ -92,24 +92,33 @@ export default {
           this.visible = true;
       },
       saveEntry() {
-        clinicasApi.createClinica(this.newEntry).then(response => {
-          this.clinicas.push(response.data.clinic);
-          this.visible = false;
-          this.newEntry = {
-            name: "",
-            cuit: "",
-            habilitation: "",
-            beds_voluntary: "",
-            beds_judicial: "",
-          };
-        })
-      },
-        saveClinic() {
-      clinicasApi.updateClinica(this.clinica.id, this.editClinic)
-        .then(response => {
-          this.clinica = response.data.clinic;
-        })
-      },
+        clinicasApi.createClinica(this.newEntry)
+          .then(response => {
+            this.clinicas.push(response.data.clinic);
+            this.$message({
+              message: 'La clinica se guardado con exito',
+              type: 'success'
+            });
+            this.visible = false;
+            this.newEntry = {
+              name: "",
+              cuit: "",
+              habilitation: "",
+              beds_voluntary: "",
+              beds_judicial: "",
+            };
+          })
+          .catch(error => {
+            console.log(error)
+            this.$message({
+              message: 'Hubo un error al guardar la clinica',
+              type: 'error'
+            });
+          })
+          .finally(() => {
+
+          })
+      }
     }
 };
 </script>

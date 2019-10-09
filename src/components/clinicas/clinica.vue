@@ -76,6 +76,12 @@
             <el-button @click="closeClinicModal()">Cancelar</el-button>
             <el-button type="primary" @click="saveClinic()">Guardar</el-button>
           </span>
+          <el-alert
+            title="clinica actualizada"
+            type="success"
+            description="la clinica fue actualizada con exito"
+            show-icon>
+          </el-alert>
       </el-dialog>
       
       <nueva-internacion

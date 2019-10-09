@@ -10,7 +10,7 @@
         <el-table-column prop="lastname" label="Apellido" />
         <el-table-column prop="document_number" label="DNI" />
         <el-table-column prop="gender" label="genero" />
-        <el-table-column prop="birth_date" label="fecha de nacimiento" />
+        <el-table-column prop="birth_date" label="fecha nacimiento" />
         <el-table-column>
           <template slot-scope="scope">
             <a @click="openEditPacienteModal(scope.row)" style="color: green">Actualizar</a><br>
@@ -178,8 +178,19 @@ export default {
       pacientesApi.updatePaciente(pacienteId, this.copyPaciente).then(response => {
         console.log("Update paciente response", response);
         this.loadListadoPacientes();
-        this.showPaciente = false;
-      });
+        this.$message({
+            message: 'El paciente se a actualizado con exito',
+            type: 'success'
+          });
+        }).catch(error => {
+          console.log(error);
+          this.$message({
+            message: 'Hubo un error al actualizar el paciente',
+            type: 'error'
+          });
+        }).finally(() => {
+          this.showPaciente = false;
+        });
     },
     getFullName(paciente) {
       return `${paciente.firstname} ${paciente.lastname}`;
@@ -216,8 +227,20 @@ export default {
           document_number: "",
           relationship: ""
         }
-      })
+        this.$message({
+              message: 'El contacto se a guardado con exito',
+              type: 'success'
+            });
+          }).catch(error => {
+            console.log(error);
+            this.$message({
+              message: 'Hubo un error al guardar el contacto',
+              type: 'error'
+            });
+          }).finally(() => {
+            this.showOpenContactModal = false;
+          });
+      }
     }
-  }
-};
+  };
 </script>

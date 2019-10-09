@@ -20,12 +20,18 @@
 					  v-model="reporte.comentario">
 					</el-input>
 	    		</el-form-item>
-	    	</el-form>
+	    		</el-form>
+    			<span slot="footer" class="dialog-footer">
+            <el-button @click="closeModal()">Cancelar</el-button>
+            <el-button type="primary" @click="guardarReporte">Guardar</el-button>
+        	</span>
     	</el-dialog>
 	</div>
 </template>
 
 <script>
+import pacientesApi from '@/services/api/pacientes';
+import { clone } from "lodash";
 	export default {
 		props: {
 			openForm: {
@@ -46,9 +52,30 @@
 					comentario: ""
 				}
 			}
-		}
-	};
-
+		},
+	methods: {
+		closeModal() {
+    	this.$emit('close');
+    },
+    guardarReporte() {
+      pacientesApi.guardarReporte(this.paciente.id, this.reporte).then(response => {
+        console.log("Update reporte response", response);
+      this.$message({
+            message: 'El reporte se guardado con exito',
+            type: 'success'
+          });
+        }).catch(error => {
+          console.log(error);
+          this.$message({
+            message: 'Hubo un error al guardar el reporte',
+            type: 'error'
+          });
+        }).finally(() => {
+          this.openForm = false;
+        });
+    }
+	}
+};
 
 
 </script>

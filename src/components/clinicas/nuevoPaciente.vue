@@ -83,7 +83,19 @@ export default {
   		this.newEntry.clinic_id = this.clinicId;
     	pacientesApi.createPacientes(this.clinicId, this.newEntry).then(response => {
     		this.$emit('finish', response.data.patient);
-    	});
+    	this.$message({
+            message: 'El paciente se guardado con exito',
+            type: 'success'
+          });
+        }).catch(error => {
+          console.log(error);
+          this.$message({
+            message: 'Hubo un error al guardar el paciente',
+            type: 'error'
+          });
+        }).finally(() => {
+          this.showForm = false;
+        });
 	  },
 	  closeForm() {
 	  	this.$emit('close');
