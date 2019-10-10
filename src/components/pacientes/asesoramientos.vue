@@ -7,7 +7,7 @@
 	  	:close-on-click-modal="false">
       <el-form :model="asesoramientos" label-width="120px">
       	<el-form-item label="Tipo de asesoramiento">
-	        <el-select v-model="reporte.type" style="width: 100%;">
+	        <el-select v-model="reporte.type" style="width: 100%;" prop="type">
 	          <el-option label="a" value="a"></el-option>
 	          <el-option label="b" value="b"></el-option>
         	</el-select>
@@ -35,7 +35,12 @@
 			asesoramiento: {
 				type: "",
 				comentario: ""
-			}
+			},
+			rules: {
+              type: [
+                { required: true, message: 'tipo no valido', trigger: 'change' },
+              ],
+            }
 		}
 
 		methods: {
@@ -43,12 +48,16 @@
     	this.$emit('close');
     },
     guardarAsesoramiento() {
+    	 this.loading = true;
+      this.$refs.loginForm.validate((valid) => {
+        if (valid)
       pacientesApi.guardarAsesoramiento(this.paciente.id, this.asesoramiento).then(response => {
         console.log("Update asesoramiento response", response);
       this.$message({
           message: 'El asesoramiento se guardado con exito',
           type: 'success'
       });
+    });
       }).catch(error => {
       console.log(error);
       this.$message({

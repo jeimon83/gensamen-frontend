@@ -1,19 +1,19 @@
 <template>
 	<div>
 		<el-dialog title="Solicitud de Informe" :visible.sync="showInformeModal">
-      <el-form :model="newInform" label-width="120px">
-	      <el-form-item label="Paciente">
+      <el-form :model="newInform" label-width="120px" ref="informeForm" :rules="rules">
+	      <el-form-item label="Paciente" prop="paciente_id">
 	        <el-select v-model="newInform.paciente_id">
 	          <el-option v-for="paciente in pacientes" :key="paciente.id" :label="paciente.name" :value="paciente.id"></el-option>
 	        </el-select>
 	      </el-form-item>
-	      <el-form-item label="Motivo">
+	      <el-form-item label="Motivo" prop="motivo">
 	        <el-select v-model="newInform.motivo" style="width: 100%;">
 	          <el-option label="Judicial" value="judicial"></el-option>
 	          <el-option label="Voluntario" value="vluntario"></el-option>
 	        </el-select>
 	      </el-form-item>
-	      <el-form-item label="Fecha">
+	      <el-form-item label="Fecha" prop="fecha">
 	        <el-date-picker
 			      v-model="newInform.fecha"
 			      type="date"
@@ -48,6 +48,17 @@ export default {
          	    	motivo: "",
               	comentarios: "",
             	},
+            	rules: {
+              paciente_id: [
+                { required: true, message: 'Nombre no valido', trigger: 'change' },
+              ],
+              motivo: [
+                { required: true, message: 'Cuit no valido', trigger: 'change'}
+              ],
+              fecha: [
+                { required: true, message: 'DNI no valido', trigger: 'blur' }
+              ]
+            }
 					}
 			}
 	};

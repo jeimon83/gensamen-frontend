@@ -68,20 +68,20 @@
     :show-close="false"
     :close-on-press-escape="false"
     :close-on-click-modal="false">
-      <el-form :model="contacto" label-width="120px">
-        <el-form-item label="Nombre">
+      <el-form :model="contacto" label-width="120px" ref="clinicasForm" :rules="rules">
+        <el-form-item label="Nombre" prop="firstname">
             <el-input v-model="contacto.firstname"></el-input>
         </el-form-item>
-        <el-form-item label="Apellido">
+        <el-form-item label="Apellido" prop="lastname">
             <el-input v-model="contacto.lastname"></el-input>
         </el-form-item>
-        <el-form-item label="Telefono">
+        <el-form-item label="Telefono" prop="phone">
             <el-input v-model="contacto.phone"></el-input>
         </el-form-item>
-        <el-form-item label="DNI">
+        <el-form-item label="DNI" prop="document_number">
             <el-input v-model="contacto.document_number"></el-input>
         </el-form-item>
-       <el-form-item label="Relacion">
+       <el-form-item label="Relacion" prop="relationship">
         <el-select v-model="contacto.relationship" clearable filterable style="width: 100%;">
           <el-option value="padre">Padre</el-option>
           <el-option value="madre">Madre</el-option>
@@ -140,7 +140,24 @@ export default {
         phone: "",
         document_number: "",
         relationship: ""
-      }
+      },
+      rules: {
+              firstname: [
+                { required: true, message: 'Nombre no valido', trigger: 'blur' }
+              ],
+              lastname: [
+                { required: true, message: 'apellido no valido', trigger: 'blur'}
+              ],
+              phone: [
+                { required: true, message: 'telefono no valido', trigger: 'blur' }
+              ],
+              document_number: [
+                { required: true, message: 'telefono no valido', trigger: 'blur' }
+              ],
+              relationship: [
+                { required: true, message: 'telefono no valido', trigger: 'change' }
+              ]
+            }
     }
   },
   created() {
@@ -215,7 +232,9 @@ export default {
     },
     saveContact() {
       this.contacto.paciente_id = this.currentPaciente.id;
-
+      this.loading = true;
+        this.$refs.clinicasForm.validate((valid) => {
+          if (valid) 
       contactApi.createContact(this.currentPaciente.id, this.contacto).then(response => {
         // this.currentPaciente.contacts.push(response.data.contact);
         this.showOpenContactModal = false;
@@ -231,6 +250,7 @@ export default {
               message: 'El contacto se a guardado con exito',
               type: 'success'
             });
+        });
           }).catch(error => {
             console.log(error);
             this.$message({

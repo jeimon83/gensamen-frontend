@@ -30,20 +30,20 @@
     </el-main>
 
      <el-dialog title="Ingreso de clinica" :visible.sync="visible">
-      <el-form :model="newEntry" label-width="120px">
-        <el-form-item label="Nombre">
+      <el-form :model="newEntry" ref="clinicasForm" :rules="rules" label-width="200px">
+        <el-form-item label="Nombre" prop="name">
           <el-input v-model="newEntry.name"></el-input>
         </el-form-item>
-        <el-form-item label="cuit">
+        <el-form-item label="cuit" prop="cuit">
           <el-input v-model="newEntry.cuit"></el-input>
         </el-form-item>
-        <el-form-item label="Permiso">
+        <el-form-item label="Permiso" prop="habilitation">
           <el-input v-model="newEntry.habilitation"></el-input>
         </el-form-item>
-        <el-form-item label="Camas disponibles (voluntario)">
+        <el-form-item label="Camas (voluntario)" prop="beds_voluntary">
           <el-input-number v-model="newEntry.beds_voluntary" :min="1" :max="500"></el-input-number>
         </el-form-item>
-        <el-form-item label="Camas disponibles (judicial)">
+        <el-form-item label="Camas (judicial)" prop="beds_judicial">
           <el-input-number v-model="newEntry.beds_judicial" :min="1" :max="500"></el-input-number>
         </el-form-item>
       </el-form>
@@ -72,6 +72,23 @@ export default {
                 beds_voluntary: "",
                 beds_judicial: "",
             },
+            rules: {
+              name: [
+                { required: true, message: 'Nombre no valido', trigger: 'blur' },
+              ],
+              cuit: [
+                { required: true, message: 'cuit no valido', trigger: 'blur'}
+              ],
+              habilitation: [
+                { required: true, message: 'habilitation no valido', trigger: 'blur' }
+              ],
+              beds_voluntary: [
+                { min: 1, max: 500, message: 'es necesario 1 cama como minimo', trigger: 'blur' }
+              ],
+              beds_judicial: [
+                { min: 1, max: 500, message: 'es necesario 1 cama como minimo', trigger: 'blur' }
+              ]
+            }
         }
     },
     created() {
@@ -92,32 +109,39 @@ export default {
           this.visible = true;
       },
       saveEntry() {
-        clinicasApi.createClinica(this.newEntry)
-          .then(response => {
-            this.clinicas.push(response.data.clinic);
-            this.$message({
-              message: 'La clinica se guardado con exito',
-              type: 'success'
-            });
-            this.visible = false;
-            this.newEntry = {
-              name: "",
-              cuit: "",
-              habilitation: "",
-              beds_voluntary: "",
-              beds_judicial: "",
-            };
-          })
-          .catch(error => {
-            console.log(error)
-            this.$message({
-              message: 'Hubo un error al guardar la clinica',
-              type: 'error'
-            });
-          })
-          .finally(() => {
-
-          })
+        this.loading = true;
+        this.$refs.clinicasForm.validate((valid) => {
+          if (valid) {
+            clinicasApi.createClinica(this.newEntry)
+              .then(response => {
+                this.clinicas.push(response.data.clinic);
+                this.$message({
+                  message: 'La clinica se guardado con exito',
+                  type: 'success'
+                });
+                this.visible = false;
+                this.newEntry = {
+                  name: "",
+                  cuit: "",
+                  habilitation: "",
+                  beds_voluntary: "",
+                  beds_judicial: "",
+                };
+              })
+              .catch(error => {
+                console.log(error)
+                this.$message({
+                  message: 'Hubo un error al guardar la clinica',
+                  type: 'error'
+                });
+              })
+              .finally(() => {
+                this.loading = false
+              })
+          } else {
+            return false;
+          }
+        });
       }
     }
 };

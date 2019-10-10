@@ -5,7 +5,7 @@
 			:show-close="false"
 	  	:close-on-press-escape="false"
 	  	:close-on-click-modal="false">
-      <el-form :model="reporte" label-width="120px">
+      <el-form :model="reporte" label-width="120px" prop="type">
       	<el-form-item label="Tipo de reporte">
 	        <el-select v-model="reporte.type" style="width: 100%;">
 	          <el-option label="a" value="a"></el-option>
@@ -50,7 +50,12 @@ import { clone } from "lodash";
 				reporte: {
 					type: "",
 					comentario: ""
-				}
+				},
+				rules: {
+              type: [
+                { required: true, message: 'tipo no valido', trigger: 'change' },
+              ],
+            }
 			}
 		},
 	methods: {
@@ -58,12 +63,16 @@ import { clone } from "lodash";
     	this.$emit('close');
     },
     guardarReporte() {
+    	 this.loading = true;
+      	this.$refs.loginForm.validate((valid) => {
+        if (valid)
       pacientesApi.guardarReporte(this.paciente.id, this.reporte).then(response => {
         console.log("Update reporte response", response);
       this.$message({
             message: 'El reporte se guardado con exito',
             type: 'success'
           });
+    });
         }).catch(error => {
           console.log(error);
           this.$message({

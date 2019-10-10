@@ -6,8 +6,8 @@
     	:show-close="false"
     	:close-on-press-escape="false"
     	:close-on-click-modal="false">
-        <el-form :model="newEntry" label-position="top">
-          <el-form-item label="Paciente">
+        <el-form :model="newEntry" label-position="top" ref="informeForm" :rules="rules">
+          <el-form-item label="Paciente" prop="patient_id">
             <el-row :gutter="10">
               <el-col :span="12">
                 <el-select style="width: 100%;" v-model="newEntry.patient_id">
@@ -23,7 +23,7 @@
           </el-form-item>
           <el-row :gutter="10">
               <el-col :span="12">
-                  <el-form-item label="Motivo">
+                  <el-form-item label="Motivo" prop="type">
                       <el-select v-model="newEntry.type" style="width: 100%;">
                           <el-option label="Judicial" value="judicial"></el-option>
                           <el-option label="Voluntario" value="voluntario"></el-option>
@@ -31,7 +31,7 @@
                   </el-form-item>
               </el-col>
               <el-col :span="12">
-                  <el-form-item label="Fecha">
+                  <el-form-item label="Fecha" prop="begin_date">
                       <el-date-picker
                       	v-model="newEntry.begin_date"
                       	type="date"
@@ -89,6 +89,17 @@ export default {
             },
             pacientes: [],
             newPatients: false,
+            rules: {
+              paciente_id: [
+                { required: true, message: 'Nombre no valido', trigger: 'change' },
+              ],
+              type: [
+                { required: true, message: 'Cuit no valido', trigger: 'change'}
+              ],
+              begin_date: [
+                { required: true, message: 'DNI no valido', trigger: 'blur' }
+              ]
+            }
         }
     },
     created() {
