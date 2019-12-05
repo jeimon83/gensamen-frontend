@@ -51,7 +51,7 @@
         <el-button @click="entryVisible = false">Cancelar</el-button>
         <el-button type="primary" @click="saveEntry()">Guardar</el-button>
       </span>
-    </el-dialog>        
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -80,10 +80,10 @@ export default {
                 { required: true, message: 'cuit no valido', trigger: 'blur'}
               ],
               habilitation: [
-                { required: true, message: 'habilitation no valido', trigger: 'blur' }
+                { required: true, message: 'habilitation no valida', trigger: 'blur' }
               ],
               beds_voluntary: [
-                { min: 1, max: 500, message: 'es necesario 1 cama como minimo', trigger: 'blur' }
+                { min: 1, max: 500, message: 'es necesario 1 cama como minimo', trigger: 'input' }
               ],
               beds_judicial: [
                 { min: 1, max: 500, message: 'es necesario 1 cama como minimo', trigger: 'blur' }
@@ -116,7 +116,7 @@ export default {
               .then(response => {
                 this.clinicas.push(response.data.clinic);
                 this.$message({
-                  message: 'La clinica se guardado con exito',
+                  message: 'La clinica se a guardado con exito',
                   type: 'success'
                 });
                 this.visible = false;

@@ -1,14 +1,21 @@
-import Vue from 'vue'
+ import Vue from 'vue'
 import Router from 'vue-router'
-import Clinicas from '@/components/clinicas/clinicas'
+
+import Login from '@/components/login/login'
+
+import AdminApp from '@/components/adminApp'
+import Clinicas from '@/components/admin/clinicas'
+import Users from '@/components/admin/users'
+
+import UserApp from '@/components/UserApp'
 import Dashboard from '@/components/dashboard'
 import Clinica from '@/components/clinicas/clinica'
 import Paciente from '@/components/pacientes/paciente'
-import Login from '@/components/login/login'
-import PrivateApp from '@/components/privateApp'
-import User from '@/components/perfilUser/user'
+import Perfil from '@/components/perfil/user'
 import ClinicaPacientes from '@/components/pacientes/listado'
 import PerfilPaciente from '@/components/pacientes/perfilPaciente'
+
+// crear User
 Vue.use(Router)
 
 const router = new Router({
@@ -20,8 +27,42 @@ const router = new Router({
     },
     {
       path: '/',
-      component: PrivateApp,
-      meta: { requiresAuth: true },
+      redirect: to => {
+        let user = localStorage.getItem('user')
+        if (!user) {
+          return '/login'
+        } else {
+          let parsed_user = JSON.parse(user);
+          if (parsed_user.role === 'admin') {
+            return '/admin';
+          }
+          else {
+            return '/user'
+          }
+        }
+      }
+    },
+    {
+      path: '/admin',
+      component: AdminApp,
+      meta: { requiresAuth: true, requireAdmin: true },
+      children: [
+        {
+          path: '',
+          name: 'Users',
+          component: Users
+        },
+        {
+          path: 'clinicas',
+          name: 'Clinicas',
+          component: Clinicas
+        }
+      ]
+    },
+    {
+      path: '/user',
+      component: UserApp,
+      meta: { requiresAuth: true, requireAdmin: false },
       children: [
         {
           path: '',
@@ -29,39 +70,41 @@ const router = new Router({
           component: Dashboard
         },
         {
-          path: '/clinicas',
-          name: 'Clinicas',
-          component: Clinicas
-        },
-        {
-          path: '/clinica/:id/pacientes',
+          path: 'clinica/:id/pacientes',
           name: 'ClinicaPacientes',
           component: ClinicaPacientes
         },
         {
-          path: '/clinica/:id',
+          path: 'clinica/:id',
           name: 'Clinica',
           component: Clinica
         },
         {
-          path: '/paciente/:id',
+          path: 'paciente/:id',
           name: 'Paciente',
           component: Paciente
         },
         {
-          path: '/user',
+          path: '/perfil',
           name: 'UserProfile',
-          component: User
-        },
-        // {
-        //   path: '/paciente/:id',
-        //   name: 'PerfilPaciente',
-        //   component: PerfilPaciente
-        // }
+          component: Perfil
+        }
       ]
     }
   ]
-})
+});
+
+const checkAdminRole = (to, next) => {
+  let user = localStorage.getItem('user')
+
+  if (user && to.meta.requireAdmin) {
+    let parsed_user = JSON.parse(user);
+    if (parsed_user.role === 'admin') next()
+    else next({ name: 'Forbidden' });
+  } else {
+    next();
+  }
+}
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
@@ -71,7 +114,7 @@ router.beforeEach((to, from, next) => {
     if (token) {
       const exp_ts = Number(data.exp) * 1000;
       if (exp_ts >= now.getTime()) {
-        next();
+        checkAdminRole(to, next)
       } else {
         next({ name: "Login" });
       }

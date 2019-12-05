@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import userApi from "@/services/api/users"
+import userApi from "@/services/api/auth"
 export default {
   data() {
     return {
@@ -41,18 +41,28 @@ export default {
       this.loading = true;
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          userApi.login(this.form.email, this.form.password).then(response => {
-            this.$router.push({ name: 'Clinicas' });
-          });
+          userApi.login(this.form.email, this.form.password)
+            .then(response => {
+              if (response.role === 'admin')
+                this.$router.push({ name: 'Users' })
+              else
+                this.$router.push({ name: 'Clinicas' });
+            })
+            .catch(error => {
+              console.log("ERROR LOGIN", error);
+              this.$message({
+                message: error,
+                type: 'error'
+              });
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         } else {
           console.log('error submit!!');
           return false;
         }
-      }).catch(error => {
-          console.log("Error cargando internaciones", error);
-        }).finally(() => {
-          this.loading = false;
-        });
+      })
    },
     resetForm(formEmail) {
       this.$refs[formEmail].resetFields();

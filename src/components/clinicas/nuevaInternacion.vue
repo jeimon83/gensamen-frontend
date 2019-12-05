@@ -91,10 +91,10 @@ export default {
             newPatients: false,
             rules: {
               paciente_id: [
-                { required: true, message: 'Nombre no valido', trigger: 'change' },
+                { required: true, message: 'Nombre no valido', trigger: 'blur' },
               ],
               type: [
-                { required: true, message: 'Cuit no valido', trigger: 'change'}
+                { required: true, message: 'Cuit no valido', trigger: 'blur'}
               ],
               begin_date: [
                 { required: true, message: 'DNI no valido', trigger: 'blur' }

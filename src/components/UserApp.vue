@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import interceptorSetup from '../services/interceptor';
 export default {
 	name: 'PrivateApp',
 	data() {
@@ -52,7 +51,6 @@ export default {
 		}
 	},
 	created() {
-		interceptorSetup();
 		this.loadUser();
 	},
 	methods: {

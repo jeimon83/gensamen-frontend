@@ -3,6 +3,8 @@
     <el-header>
       <div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a> Clinica {{ clinica.name }}</div>
       <div class="main-controls">
+        <el-button type="primary" @click="openModalReporte()">Solicitar Reporte</el-button>
+        <el-button type="primary" @click="openModalAsesoramientos()">Solicitar asesoramientos</el-button>
         <el-button type="primary" @click="openInternacionModal()">Ingresar Paciente</el-button>
         <router-link class="el-button el-button--primary" style="text-decoration: none;" :to="{ name: 'ClinicaPacientes', params: { id: clinica.id } }">
           Pacientes
@@ -55,14 +57,14 @@
       	:show-close="false"
       	:close-on-press-escape="false"
       	:close-on-click-modal="false">
-          <el-form :model="editClinic" label-width="120px">
-              <el-form-item label="Nombre">
+          <el-form :model="editClinic" label-width="120px" ref="pacienteForm" :rules="rulesClinic">
+              <el-form-item label="Nombre" prop="name">
                   <el-input v-model="editClinic.name"></el-input>
               </el-form-item>
-              <el-form-item label="cuit">
+              <el-form-item label="cuit" prop="cuit">
                   <el-input v-model="editClinic.cuit"></el-input>
               </el-form-item>
-              <el-form-item label="Permiso">
+              <el-form-item label="Permiso" prop="habilitation">
                   <el-input v-model="editClinic.habilitation"></el-input>
               </el-form-item>
               <el-form-item label="Camas disponibles (voluntario)">
@@ -76,12 +78,6 @@
             <el-button @click="closeClinicModal()">Cancelar</el-button>
             <el-button type="primary" @click="saveClinic()">Guardar</el-button>
           </span>
-          <el-alert
-            title="clinica actualizada"
-            type="success"
-            description="la clinica fue actualizada con exito"
-            show-icon>
-          </el-alert>
       </el-dialog>
       
       <nueva-internacion
@@ -98,6 +94,20 @@
         @close="showNewContactModal = false"
         @finish="(data) => addContact(data)"/>
 
+      <reporte
+         v-if="clinica.id"
+         :open-form="showReporte"
+         :item="clinica"
+         item-type="Clinic"
+         @close="showReporte = false"/>
+
+         <asesoramiento
+         v-if="clinica.id"
+         :open-form="showAsesoramiento"
+         :item="clinica"
+         item-type="Clinic"
+         @close="showAsesoramiento = false"/>
+
       <!-- <nuevo-informe
         v-if="clinica.id"
         :clinica-id="clinica.id"
@@ -111,11 +121,11 @@
         :show-close="false"
         :close-on-press-escape="false"
         :close-on-click-modal="false">
-        <el-form :model="copyInternacion" label-width="120px">
-          <el-form-item label="Tipo">
+        <el-form :model="copyInternacion" label-width="120px" ref="pacienteForm" :rules="rulesInternacion">
+          <el-form-item label="Tipo" prop="type">
             <el-input v-model="copyInternacion.type" disabled readonly/>
           </el-form-item>
-          <el-form-item label="Inicio">
+          <el-form-item label="Inicio" prop="begin_date">
             <el-date-picker
               v-model="copyInternacion.begin_date"
               type="date"
@@ -125,7 +135,7 @@
               value-format="MM/dd/yyyy">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="Fin Internacion">
+          <el-form-item label="Fin Internacion" prop="end_date">
             <el-date-picker
               v-model="copyInternacion.end_date"
               type="date"
@@ -152,9 +162,11 @@ import nuevaInternacion from "./nuevaInternacion";
 import internacionesApi from "@/services/api/internaciones";
 import nuevoInforme from "./nuevoInforme";
 import nuevoContacto from "@/components/pacientes/nuevoContacto";
+import reporte from "@/components/shared/reporte";
+import asesoramiento from "@/components/shared/asesoramiento"
 export default {
   name: "Clinica",
-  components: { nuevaInternacion, nuevoInforme,nuevoContacto },
+  components: { nuevaInternacion, nuevoInforme,nuevoContacto, reporte, asesoramiento },
   data() {
     return {
       clinicaId: null,
@@ -164,6 +176,8 @@ export default {
       showVerPacientes: false,
       showInternacion: false,
       showNewContactModal: false,
+      showReporte: false,
+      showAsesoramiento: false,
       loading: false,
       clinica: {
           id: "",
@@ -187,7 +201,29 @@ export default {
         end_date: "",
         begin_date: ""
       },
-      paciente: {}
+      paciente: {},
+        rulesClinic: {
+            name: [
+              { required: true, message: 'El Nombre no puede estar en blanco', trigger: 'blur' },
+            ],
+            cuit: [
+              { required: true, message: 'El Apellido no puede estar en blanco', trigger: 'blur'}
+            ],
+            habilitation: [
+              { required: true, message: 'El DNI no es valido', trigger: 'blur' }
+            ]
+        },
+        rulesInternacion: {
+            type: [
+              { required: true, message: 'tipo no valido', trigger: 'blur' },
+            ],
+            begin_date: [
+              { required: true, message: 'elige una fecha', trigger: 'blur'}
+            ],
+            end_date: [
+              { required: true, message: 'elige una fecha', trigger: 'blur' }
+            ]
+        }
     }
   },
   created() {
@@ -201,6 +237,9 @@ export default {
      openNewContactModal(internacion) {
       this.paciente = clone(internacion.patient)
       this.showNewContactModal = true;
+    },
+    openModalReporte() {
+      this.showReporte = true;
     },
     openInternacionModal() {
       this.showInternacionModal = true;
@@ -285,6 +324,9 @@ export default {
         this.loadInternaciones();
         this.showInternacion = false;
       })
+    },
+    openModalAsesoramientos() {
+      this.showAsesoramiento = true;
     },
     addContact(contacto) {
       console.log(contacto);

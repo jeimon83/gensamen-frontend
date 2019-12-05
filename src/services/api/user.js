@@ -6,12 +6,21 @@ async function updateUser(data) {
 	try {
 		const response = await axios.patch(`/users/update`, { user: data })
 		return response;
-		console.log(response);
 	} catch (error) {
 		console.error(error);
 	}
 }
 
+async function getUsers() {
+	try {
+		const response = await axios.get(`/users`)
+		return response;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 export default {
-	updateUser
+	updateUser,
+	getUsers
 }

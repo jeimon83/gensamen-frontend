@@ -1,7 +1,7 @@
 <template>
   <div class="container-wrapper">
     <el-header>
-      <div class="main-title">Dashboard</div>
+      <router-link :to="{ name: 'Dashboard' }" class="main-title">Dashboard</router-link>
     </el-header>
     <el-main>
       El dashboard

@@ -3,9 +3,13 @@
 </template>
 
 <script>
+import interceptorSetup from './services/interceptor';
 
 export default {
-  name: 'app'
+  name: 'app',
+  created() {
+    interceptorSetup()
+  }
 };
 </script>
 

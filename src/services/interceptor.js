@@ -22,11 +22,11 @@ export default function setup() {
       return Promise.resolve(response);
     },
     error => {
+      console.log($route.matched.some(({ name }) => name === 'login'))
       if (error.response.status === 401) {
-        console.log(`Redirec to login: ${error.response.status}`);
         router.push("/login");
       }
-      return Promise.reject(error.response);
+      return Promise.reject(error);
     }
   );
 }

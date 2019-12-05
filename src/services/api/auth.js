@@ -7,17 +7,16 @@ async function login(email, password) {
 	try {
     const response = await axios.post(`/login`, {
     	auth: {
-    		email: email,
+        email: email,
     		password: password
     	}
     });
     let { auth_token, user } = response.data;
     localStorage.setItem('token', auth_token);
     localStorage.setItem('user', JSON.stringify(user));
-    return true;
+    return user;
   } catch (error) {
-    console.error(error);
-    throw error
+    throw new Error('revise su usuario y contrasena');
   }
 }
 

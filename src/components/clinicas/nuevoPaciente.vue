@@ -69,13 +69,13 @@ export default {
       },
       rules: {
               firstname: [
-                { required: true, message: 'Nombre no puede estar en blanco', trigger: 'blur' },
+                { required: true, message: 'El Nombre no puede estar en blanco', trigger: 'blur' },
               ],
               lastname: [
-                { required: true, message: 'Apellido no puede estar en blanco', trigger: 'blur'}
+                { required: true, message: 'El Apellido no puede estar en blanco', trigger: 'blur'}
               ],
               document_number: [
-                { required: true, message: 'DNI no valido', trigger: 'blur' }
+                { required: true, message: 'El DNI no es valido', trigger: 'blur' }
               ],
               gender: [
                 { required: true, message: 'debes deleccionar un Genero', trigger: 'change' }

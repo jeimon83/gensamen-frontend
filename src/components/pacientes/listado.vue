@@ -31,24 +31,24 @@
       :show-close="false" 
       :close-on-press-escape="false" 
       :close-on-click-modal="false">
-        <el-form :model="copyPaciente" label-position="top">
-          <el-form-item label="Nombre">
+        <el-form :model="copyPaciente" label-position="top" ref="informeForm" :rules="rulesPatient">
+          <el-form-item label="Nombre" prop="firstname">
             <el-input placeholder="nombre" v-model="copyPaciente.firstname" />
           </el-form-item>
-          <el-form-item label="Apellido">
+          <el-form-item label="Apellido" prop="lastname">
             <el-input placeholder="apellido" v-model="copyPaciente.lastname" />
           </el-form-item>
-          <el-form-item label="Dni">
+          <el-form-item label="Dni" prop="document_number">
             <el-input placeholder="dni" v-model="copyPaciente.document_number" />
           </el-form-item>
           <el-form-item>
-            <el-select placeholder="Genero" v-model="copyPaciente.gender">
+            <el-select placeholder="Genero" v-model="copyPaciente.gender" prop="gender">
               <el-option label="Hombre" value="hombre"></el-option>
               <el-option label="Mujer" value="mujer"></el-option>
               <el-option label="otro" value="otro"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Fecha de nacimiento">
+          <el-form-item label="Fecha de nacimiento" prop="birth_date">
             <el-date-picker
               v-model="copyPaciente.birth_date"
               type="date"
@@ -68,7 +68,7 @@
     :show-close="false"
     :close-on-press-escape="false"
     :close-on-click-modal="false">
-      <el-form :model="contacto" label-width="120px" ref="clinicasForm" :rules="rules">
+      <el-form :model="contacto" label-width="120px" ref="clinicasForm" :rules="rulesContact">
         <el-form-item label="Nombre" prop="firstname">
             <el-input v-model="contacto.firstname"></el-input>
         </el-form-item>
@@ -141,23 +141,40 @@ export default {
         document_number: "",
         relationship: ""
       },
-      rules: {
-              firstname: [
-                { required: true, message: 'Nombre no valido', trigger: 'blur' }
-              ],
-              lastname: [
-                { required: true, message: 'apellido no valido', trigger: 'blur'}
-              ],
-              phone: [
-                { required: true, message: 'telefono no valido', trigger: 'blur' }
-              ],
-              document_number: [
-                { required: true, message: 'telefono no valido', trigger: 'blur' }
-              ],
-              relationship: [
-                { required: true, message: 'telefono no valido', trigger: 'change' }
-              ]
-            }
+        rulesContact: {
+          firstname: [
+            { required: true, message: 'Nombre no valido', trigger: 'blur' }
+          ],
+          lastname: [
+            { required: true, message: 'apellido no valido', trigger: 'blur'}
+          ],
+          phone: [
+            { required: true, message: 'telefono no valido', trigger: 'blur' }
+          ],
+          document_number: [
+            { required: true, message: 'telefono no valido', trigger: 'blur' }
+          ],
+          relationship: [
+            { required: true, message: 'telefono no valido', trigger: 'change' }
+          ]
+        },
+        rulesPatient: {
+          firstname: [
+            { required: true, message: 'Nombre no valido', trigger: 'blur' }
+          ],
+          lastname: [
+            { required: true, message: 'apellido no valido', trigger: 'blur'}
+          ],
+          document_number: [
+            { required: true, message: 'DNI no valido', trigger: 'blur' }
+          ],
+          gender: [
+            { required: true, message: 'elige un genero', trigger: 'change' }
+          ],
+          birth_date: [
+            { required: true, message: 'elige tu fecha de nacimiento', trigger: 'change' }
+          ]
+        }
     }
   },
   created() {
@@ -221,7 +238,7 @@ export default {
         phone: "",
         document_number: "",
         relationship: ""
-      }
+      };
     },
     goBack() {
       this.$router.push({ name: 'Clinica'});
