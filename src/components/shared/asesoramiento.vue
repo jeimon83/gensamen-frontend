@@ -1,43 +1,37 @@
 <template>
-	<div>
-		<el-dialog title="Solicitar Asesoramiento" 
-			:visible.sync="openForm"
-			:show-close="false"
-	  	:close-on-press-escape="false"
-	  	:close-on-click-modal="false">
-      <el-form :model="asesoramiento" label-width="120px">
-      	<el-form-item label="Tipo">
-	        <el-select v-model="asesoramiento.type" style="width: 100%;" prop="type">
-	          <el-option label="a" value="a"></el-option>
-	          <el-option label="b" value="b"></el-option>
+	<el-drawer
+		:visible.sync="showPanel"
+    :width-header="true"
+  	:before-close="confirmClose"
+    size="50%">
+    <div slot="title">Asesoramientos</div>
+    <div class="panel-content">
+      <el-form :model="asesoramiento">
+      	<el-form-item>
+          <el-select v-model="asesoramiento.type" style="width: 100%;" prop="type" placeholder="seleccionar tipo">
+            <el-option label="a" value="a"></el-option>
+            <el-option label="b" value="b"></el-option>
         	</el-select>
-	    	</el-form-item>
-	    	<el-form-item label="comentario">
-	    		<el-input
-					  type="textarea"
-					  :rows="2"
-					  placeholder="comentarios"
-					  v-model="asesoramiento.comentario">
-					</el-input>
-	    		</el-form-item>
-	    		</el-form>
-    			<span slot="footer" class="dialog-footer">
-            <el-button @click="closeModal()">Cancelar</el-button>
-            <el-button type="primary" @click="guardarAsesoramiento">Guardar</el-button>
-        	</span>
-    	</el-dialog>
-	</div>
+      	</el-form-item>
+      	<el-form-item>
+      		<el-input
+  				  type="textarea"
+  				  :rows="2"
+  				  placeholder="comentarios"
+  				  v-model="asesoramiento.comentario">
+  				</el-input>
+      	</el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="guardarAsesoramiento">Guardar</el-button>
+        </el-form-item>
+  		</el-form>
+    </div>
+  </el-drawer>
 </template>
 
 <script>
 	export default {
      props: {
-        openForm: {
-            type: Boolean,
-            default: () => {
-              return false
-            }
-        },
         itemType: {
           type: String,
           required: true
@@ -49,11 +43,12 @@
     },
 		data() {
       return {
+        showPanel: false,
   			asesoramiento: {
   				type: "",
   				comentario: ""
   			},
-  		rules: {
+    		rules: {
           type: [
             { required: true, message: 'tipo no valido', trigger: 'change' },
           ],
@@ -62,8 +57,11 @@
 		},
 
 		methods: {
-			closeModal() {
-      	this.$emit('close');
+      openPanel() {
+        this.showPanel = true;
+      },
+      confirmClose() {
+        this.showPanel = false;
       },
       guardarAsesoramiento() {
       	this.loading = true;
@@ -87,7 +85,7 @@
                 });
               })
               .finally(() => {
-                this.openForm = false;
+                this.loading = false;
               });
           }
   		  })
@@ -95,3 +93,13 @@
     }
 	};
 </script>
+
+<style>
+  .panel-content {
+    padding: 10px;
+  }
+  .el-drawer__header {
+    font-size: 1.25em !important;
+    margin-bottom: 15px !important;
+  }
+</style>

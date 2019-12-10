@@ -14,6 +14,8 @@ import Paciente from '@/components/pacientes/paciente'
 import Perfil from '@/components/perfil/user'
 import ClinicaPacientes from '@/components/pacientes/listado'
 import PerfilPaciente from '@/components/pacientes/perfilPaciente'
+import ClinicaInternaciones from '@/components/clinicas/internaciones'
+import Internacion from '@/components/internacion/internacion'
 
 // crear User
 Vue.use(Router)
@@ -73,6 +75,16 @@ const router = new Router({
           path: 'clinica/:id/pacientes',
           name: 'ClinicaPacientes',
           component: ClinicaPacientes
+        },
+        {
+          path: 'clinica/:id/internaciones/:internacion_id',
+          name: 'Internacion',
+          component: Internacion
+        },
+        {
+          path: 'clinica/:id/internaciones',
+          name: 'ClinicaInternaciones',
+          component: ClinicaInternaciones
         },
         {
           path: 'clinica/:id',

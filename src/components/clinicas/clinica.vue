@@ -3,33 +3,65 @@
     <el-header>
       <div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a> Clinica {{ clinica.name }}</div>
       <div class="main-controls">
-        <el-button type="primary" @click="openModalReporte()">Solicitar Reporte</el-button>
-        <el-button type="primary" @click="openModalAsesoramientos()">Solicitar asesoramientos</el-button>
-        <el-button type="primary" @click="openInternacionModal()">Ingresar Paciente</el-button>
-        <router-link class="el-button el-button--primary" style="text-decoration: none;" :to="{ name: 'ClinicaPacientes', params: { id: clinica.id } }">
-          Pacientes
+        <router-link
+          class="el-button el-button--default el-button--small"
+          style="text-decoration: none;"
+          :to="{ name: 'ClinicaPacientes', params: { id: clinica.id } }">
+          Ver Pacientes
         </router-link>
-        <el-button type="success" @click="openClinicaModal()">Actualizar clinica</el-button>
+        <router-link 
+          class="el-button el-button--default el-button--small"
+          style="text-decoration: none;" 
+          :to="{ name: 'ClinicaInternaciones', params: { id: clinica.id } }">internaciones
+        </router-link>
+        <el-button type="danger" @click="openClinicaModal()" size="small" icon="el-icon-edit-outline">Actualizar clinica</el-button>
       </div>
     </el-header>
     <el-main style="margin-bottom: 40px;">
-      <div class="clinic-row">
-        <div class="label">CUIT</div>
-        <div class="value">{{ clinica.cuit }} </div>
-      </div>
-      <div class="clinic-row">
-        <div class="label">Nro Habilitacion</div>
-        <div class="value">{{ clinica.habilitation }} </div>
-      </div>
-      <div class="clinic-row">
-        <div class="label">Camas disponibles (judicial)</div>
-        <div class="value">{{ clinica.beds_judicial }} </div>
-      </div>
-      <div class="clinic-row">
-        <div class="label">Camas disponibles (voluntario)</div>
-        <div class="value">{{ clinica.beds_voluntary }} </div>
-      </div>
+      <el-row :gutter="20">
+        <el-col :span="16">
+          <div class="clinic-row">
+            <div class="label">CUIT</div>
+            <div class="value">{{ clinica.cuit }} </div>
+          </div>
+          <div class="clinic-row">
+            <div class="label">Nro Habilitacion</div>
+            <div class="value">{{ clinica.habilitation }} </div>
+          </div>
+          <div class="clinic-row">
+            <div class="label">Camas disponibles (judicial)</div>
+            <div class="value">{{ clinica.beds_judicial }} </div>
+          </div>
+          <div class="clinic-row">
+            <div class="label">Camas disponibles (voluntario)</div>
+            <div class="value">{{ clinica.beds_voluntary }} </div>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div style="text-align: right;">
+            <div>
+              <div>
+                <el-button 
+                type="primary" 
+                @click="openInternacionModal()" 
+                size="small" 
+                icon="el-icon-user">Ingresar Paciente
+              </el-button>
+              </div>
+              <br>
+              <el-button
+                type="primary"
+                style="width: 70%"
+                @click="openModalAsesoramientos()"
+                icon="el-icon-chat-line-round"
+                size="mini">Solicitar asesoramientos
+              </el-button>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
       <el-divider/>
+      <h3>Internaciones</h3>
       <el-table :data="internaciones" style="width: 100%" v-loading="loading">
         <el-table-column label="Paciente">
           <template slot-scope="scope">
@@ -96,17 +128,15 @@
 
       <reporte
          v-if="clinica.id"
-         :open-form="showReporte"
+         ref="reportePanel"
          :item="clinica"
-         item-type="Clinic"
-         @close="showReporte = false"/>
+         item-type="Clinic"/>
 
-         <asesoramiento
+       <asesoramiento
          v-if="clinica.id"
-         :open-form="showAsesoramiento"
+         ref="asesoramientoPanel"
          :item="clinica"
-         item-type="Clinic"
-         @close="showAsesoramiento = false"/>
+         item-type="Clinic"/>
 
       <!-- <nuevo-informe
         v-if="clinica.id"
@@ -176,8 +206,6 @@ export default {
       showVerPacientes: false,
       showInternacion: false,
       showNewContactModal: false,
-      showReporte: false,
-      showAsesoramiento: false,
       loading: false,
       clinica: {
           id: "",
@@ -239,7 +267,10 @@ export default {
       this.showNewContactModal = true;
     },
     openModalReporte() {
-      this.showReporte = true;
+      this.$refs.reportePanel.openPanel();
+    },
+    openModalAsesoramientos() {
+      this.$refs.asesoramientoPanel.openPanel();
     },
     openInternacionModal() {
       this.showInternacionModal = true;
@@ -293,7 +324,7 @@ export default {
     },
     loadInternaciones() {
       this.loading = true;
-      internacionesApi.getInternaciones(this.clinicaId).then(response => {
+      internacionesApi.getInternacionesClinica(this.clinicaId).then(response => {
         this.internaciones = response.data.internments;
       }).catch(error => {
           console.log("Error cargando internaciones", error);
@@ -324,9 +355,6 @@ export default {
         this.loadInternaciones();
         this.showInternacion = false;
       })
-    },
-    openModalAsesoramientos() {
-      this.showAsesoramiento = true;
     },
     addContact(contacto) {
       console.log(contacto);

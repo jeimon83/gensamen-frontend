@@ -3,8 +3,8 @@
     <el-header>
       <div class="main-title">Clinicas</div>
       <div>
-        <el-button type="primary" size="small" @click="openModal()">Ingresar clinica</el-button>
-        <el-button type="primary" size="small" @click="loadClinicas()">Recargar</el-button>
+        <el-button type="primary" size="small" @click="openModal()" icon="el-icon-office-building">Ingresar clinica</el-button>
+        <el-button type="primary" size="small" @click="loadClinicas()" icon="el-icon-loading">Recargar</el-button>
       </div>
     </el-header>
     <el-main style="margin-bottom: 40px;">

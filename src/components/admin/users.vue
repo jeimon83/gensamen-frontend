@@ -3,7 +3,12 @@
     <el-header>
       <div class="main-title">Usuarios</div>
       <div>
-        <el-button type="primary" size="small" @click="openUserModal()">nuevo usuario</el-button>
+        <el-button type="primary" 
+        size="small" 
+        @click="openUserModal()" 
+        icon="el-icon-s-custom">
+        nuevo usuario
+        </el-button>
       </div>
     </el-header>
 
@@ -15,20 +20,17 @@
         <el-form-item label="Email" prop="email">
           <el-input v-model="user.email"></el-input>
         </el-form-item>
-        <el-form-item label="Clinica">
-          <el-select placeholder="Clinica" v-model="user.clinica.id">
+        <el-form-item label="Rol">
+          <el-select placeholder="Rol" style="width: 100%" v-model="user.role" prop="role">
+            <el-option v-for="role in roles" :key="role.value" :label="role.label" :value="role.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="user.role" label="Clinica">
+          <el-select placeholder="Clinica" style="width: 100%" :disabled="disableClinic" v-model="user.clinic_id">
             <el-option v-for="clinica in clinicas" :key="clinica.id" :label="clinica.name" :value="clinica.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="Rol">
-          <el-select placeholder="Rol" v-model="user.role" prop="role">
-            <el-option label="Administrador" value="admin"></el-option>
-            <el-option label="Supervisor" value="supervisor"></el-option>
-            <el-option label="Operador" value="operador"></el-option>
-            <el-option label="Supervisor de Clinica" value="supervisor_de_clinica"></el-option>
-            <el-option label="Operador de Clinica" value="operador_de_clinica"></el-option>
-          </el-select>
-        </el-form-item>
+        {{ user }}
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="entryVisible = false">Cancelar</el-button>
@@ -70,8 +72,7 @@
 import usersApi from "@/services/api/user";
 import clinicasApi from "@/services/api/clinicas";
 
-
-	export default {
+export default {
 	name: 'AdminApp',
 	data() {
 		return {
@@ -79,10 +80,16 @@ import clinicasApi from "@/services/api/clinicas";
       loading: false,
       visible: false,
       clinicas: [],
+      disableClinic: false,
+      roles: [
+        { label: "Administrador", value: "admin" },
+        { label: "Operador", value: "studio_op" },
+        { label: "Operador de clinica", value: "clinic_op" }
+      ],
       user: {
         name: "",
         email: "",
-        clinica: "",
+        clinic_id: "",
         role: ""
       },
       rules: {
@@ -101,6 +108,17 @@ import clinicasApi from "@/services/api/clinicas";
       }
 		}
 	},
+  watch: {
+    'user.role': function(newValue, oldValue) {
+      console.log(oldValue, newValue)
+      if (newValue === 'admin') {
+        this.user.clinic_id = null;
+        this.disableClinic = true
+      } else {
+        this.disableClinic = false;
+      }
+    }
+  },
 	created() {
     this.users = this.$route.params.id;
     this.loadUsers();

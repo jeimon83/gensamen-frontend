@@ -2,7 +2,7 @@
 	<div>
 		<el-header>
       <div class="title">usuario</div>
-      <el-button type="primary" @click="openEditUser()">editar usuario</el-button>      
+      <el-button type="primary" @click="openEditUser()" icon="el-icon-edit">editar usuario</el-button>      
     </el-header>
 
     <el-main>
