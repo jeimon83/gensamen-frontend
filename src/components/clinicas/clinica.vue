@@ -73,8 +73,8 @@
         <el-table-column prop="end_date" label="Fin" />
         <el-table-column>
           <template slot-scope="scope">
-            <router-link :to="{ name: 'Paciente', params: { id: scope.row.patient.id } }" style="color: blue;">
-              ver {{ scope.row.patient.id }}
+            <router-link :to="{ name: 'Internacion', params: { id: clinicaId, internacion_id: scope.row.id } }" style="color: blue;">
+              ver
             </router-link>
             <br>
             <a @click="openEditInternacionModal(scope.row)" style="color: green;">actualizar</a><br>

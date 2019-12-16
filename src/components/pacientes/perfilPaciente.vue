@@ -22,29 +22,30 @@
         <div class="value">{{ paciente.birth_date }} </div>
       </div>
     </el-main>
-	</div>
+  </div>
 </template>
 
 <script>
 import pacientesApi from '@/services/api/pacientes';
+
 	export default {
 		data() {
 			return {
 				paciente: {
-        firstname: "",
-        lastname: "",
-        document_number: "",
-        gender: "",
-        birth_date: ""
-      },
-			}
+          firstname: "",
+          lastname: "",
+          document_number: "",
+          gender: "",
+          birth_date: ""
+        },
+		  }
 		},
 	methods: {
 		loadPaciente() {
       pacientesApi.getPacientes(this.pacienteId).then(response => {
         this.paciente = response.data.patients;
       });
-    }
-	}
+    },
+  }
 };
 </script>

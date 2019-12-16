@@ -13,6 +13,16 @@ async function createContact(pacienteId, data) {
 	}
 }
 
+async function getContacts(pacienteId) {
+	try {
+		const response = await axios.get(`/patients/${pacienteId}/contacts`)
+		return response;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export default {
-	createContact
+	createContact,
+	getContacts
 }

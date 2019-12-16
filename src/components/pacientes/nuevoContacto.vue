@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import contactApi from '@/services/api/contact'
+import contactsApi from '@/services/api/contacts'
 export default {
 	props: {
 		pacienteId: {
@@ -95,7 +95,7 @@ export default {
       this.$emit('close');
 		},
 		saveContact() {
-			contactApi.createContact(this.pacienteId, this.contacto).then(response => {
+			contactsApi.createContact(this.pacienteId, this.contacto).then(response => {
           this.contact = response.data.contact;
           this.$emit('finish', response.data.contact);
         })

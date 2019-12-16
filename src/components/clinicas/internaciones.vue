@@ -1,7 +1,7 @@
 <template>
 	<div class="container-wrapper" v-loading="loading">
     <el-header>
-    	<div class="main-title">
+    	<div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a>
         Internaciones
       </div>
     </el-header>
@@ -58,6 +58,9 @@ import internacionesApi from '@/services/api/internaciones';
 		        this.loading = false;
         	})
 		  },
+		  goBack() {
+      this.$router.push({ name: 'Clinica'});
+    },
 		}
 	};
 </script>

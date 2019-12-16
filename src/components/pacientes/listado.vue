@@ -18,12 +18,47 @@
         </el-table-column>
         <el-table-column>
           <template slot-scope="scope">
-            <router-link :to="{ name: 'Paciente', params: { id: scope.row.id } }" style="color: blue;">ver</router-link><br>
-            <a @click="openContactModal(scope.row)" style="color: blue">Contactos</a>
+            <a @click="openContactDrawer(scope.row)" style="color: blue">Ver Contactos</a>
           </template>
         </el-table-column>
       </el-table>
     </el-main>
+
+    <el-drawer
+      :visible.sync="showContactDrawer"
+      :show-close="false"
+      size="50%"
+      :close-on-press-escape="false">
+      <div slot="title">
+        Contactos
+        <el-button size="small" type="primary" style="float: right;"
+            @click="openContactModal(currentPaciente)">Nuevo Contacto</el-button>
+      </div>
+      <div style="padding: 0px 20px 20px">
+        <div v-for="contacto in contactos" :key="contacto.id" class="contacto">
+          <div class="contact-row">
+            <div class="label">Nombre:</div>
+            <div class="value">{{ contacto.firstname }} </div>
+          </div>
+          <div class="contact-row">
+            <div class="label">Apellido:</div>
+            <div class="value">{{ contacto.lastname }} </div>
+          </div>
+          <div class="contact-row">
+            <div class="label">Telefono:</div>
+            <div class="value">{{ contacto.phone }} </div>
+          </div>
+          <div class="contact-row">
+            <div class="label">DNI:</div>
+            <div class="value">{{ contacto.document_number }} </div>
+          </div>
+          <div class="contact-row">
+            <div class="label">Relacion:</div>
+            <div class="value">{{ contacto.relationship }} </div>
+          </div>
+        </div>
+      </div>
+    </el-drawer>
 
     <el-dialog 
       title="Actualizar Paciente" 
@@ -57,66 +92,66 @@
            </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="closeModal()">Cancelar</el-button>
+            <el-button @click="closeModalPaciente()">Cancelar</el-button>
             <el-button type="primary" @click="updatePaciente()">Guardar</el-button>
         </span>
     </el-dialog>
 
-  <el-dialog
-    title="Nuevo Contacto"
-    :visible.sync="showOpenContactModal"
-    :show-close="false"
-    :close-on-press-escape="false"
-    :close-on-click-modal="false">
+    <el-dialog
+      title="Nuevo Contacto"
+      :visible.sync="showOpenContactModal"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :close-on-click-modal="false">
       <el-form :model="contacto" label-width="120px" ref="clinicasForm" :rules="rulesContact">
         <el-form-item label="Nombre" prop="firstname">
-            <el-input v-model="contacto.firstname"></el-input>
+          <el-input v-model="contacto.firstname"></el-input>
         </el-form-item>
         <el-form-item label="Apellido" prop="lastname">
-            <el-input v-model="contacto.lastname"></el-input>
+          <el-input v-model="contacto.lastname"></el-input>
         </el-form-item>
         <el-form-item label="Telefono" prop="phone">
-            <el-input v-model="contacto.phone"></el-input>
+          <el-input v-model="contacto.phone"></el-input>
         </el-form-item>
         <el-form-item label="DNI" prop="document_number">
-            <el-input v-model="contacto.document_number"></el-input>
+          <el-input v-model="contacto.document_number"></el-input>
         </el-form-item>
-       <el-form-item label="Relacion" prop="relationship">
-        <el-select v-model="contacto.relationship" clearable filterable style="width: 100%;">
-          <el-option value="padre">Padre</el-option>
-          <el-option value="madre">Madre</el-option>
-          <el-option value="hijo">Hijo/a</el-option>
-          <el-option value="hermano">Hermano/a</el-option>
-          <el-option value="tutor">Tutor/a</el-option>
-          <el-option value="conyuge">Conyuge</el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
+        <el-form-item label="Relacion" prop="relationship">
+          <el-select v-model="contacto.relationship" clearable filterable style="width: 100%;">
+              <el-option value="padre">Padre</el-option>
+              <el-option value="madre">Madre</el-option>
+              <el-option value="hijo">Hijo/a</el-option>
+              <el-option value="hermano">Hermano/a</el-option>
+              <el-option value="tutor">Tutor/a</el-option>
+              <el-option value="conyuge">Conyuge</el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeModal()">Cancelar</el-button>
         <el-button type="primary" @click="saveContact">Guardar</el-button>
       </span>
-  </el-dialog>
+    </el-dialog>
 
     <nuevo-paciente 
       v-if="clinicaId" 
       :clinic-id="clinicaId" 
       :show-form="newPatients" 
       @close="newPatients = false;" 
-      @finish="(data) => closeNewPatient(data)" />
+      @finish="(data) => closeNewPatient(data)"
+    />
   </div>
 </template>
 <script>
 import pacientesApi from '@/services/api/pacientes';
 import nuevoPaciente from '@/components/clinicas/nuevoPaciente';
-import contactApi from '@/services/api/contact'
+import contactsApi from '@/services/api/contacts'
 import { clone } from "lodash";
 export default {
   name: 'listadoPacientes',
   components: {
     nuevoPaciente
   },
-
   data() {
     return {
       pacientes: [],
@@ -125,6 +160,8 @@ export default {
       newPatients: false,
       showPaciente: false,
       showOpenContactModal: false,
+      showContactDrawer: false,
+      showClosePacienteModal: false,
       loading: false,
       copyPaciente: {
         firstname: "",
@@ -141,40 +178,41 @@ export default {
         document_number: "",
         relationship: ""
       },
-        rulesContact: {
-          firstname: [
-            { required: true, message: 'Nombre no valido', trigger: 'blur' }
-          ],
-          lastname: [
-            { required: true, message: 'apellido no valido', trigger: 'blur'}
-          ],
-          phone: [
-            { required: true, message: 'telefono no valido', trigger: 'blur' }
-          ],
-          document_number: [
-            { required: true, message: 'telefono no valido', trigger: 'blur' }
-          ],
-          relationship: [
-            { required: true, message: 'telefono no valido', trigger: 'change' }
-          ]
-        },
-        rulesPatient: {
-          firstname: [
-            { required: true, message: 'Nombre no valido', trigger: 'blur' }
-          ],
-          lastname: [
-            { required: true, message: 'apellido no valido', trigger: 'blur'}
-          ],
-          document_number: [
-            { required: true, message: 'DNI no valido', trigger: 'blur' }
-          ],
-          gender: [
-            { required: true, message: 'elige un genero', trigger: 'change' }
-          ],
-          birth_date: [
-            { required: true, message: 'elige tu fecha de nacimiento', trigger: 'change' }
-          ]
-        }
+      contactos: [],
+      rulesContact: {
+        firstname: [
+          { required: true, message: 'Nombre no valido', trigger: 'blur' }
+        ],
+        lastname: [
+          { required: true, message: 'apellido no valido', trigger: 'blur'}
+        ],
+        phone: [
+          { required: true, message: 'telefono no valido', trigger: 'blur' }
+        ],
+        document_number: [
+          { required: true, message: 'telefono no valido', trigger: 'blur' }
+        ],
+        relationship: [
+          { required: true, message: 'telefono no valido', trigger: 'change' }
+        ]
+      },
+      rulesPatient: {
+        firstname: [
+          { required: true, message: 'Nombre no valido', trigger: 'blur' }
+        ],
+        lastname: [
+          { required: true, message: 'apellido no valido', trigger: 'blur'}
+        ],
+        document_number: [
+          { required: true, message: 'DNI no valido', trigger: 'blur' }
+        ],
+        gender: [
+          { required: true, message: 'elige un genero', trigger: 'change' }
+        ],
+        birth_date: [
+          { required: true, message: 'elige tu fecha de nacimiento', trigger: 'change' }
+        ]
+      }
     }
   },
   created() {
@@ -185,6 +223,7 @@ export default {
     loadListadoPacientes() {
       this.loading = true;
       pacientesApi.getPacientes(this.clinicaId).then(response => {
+        console.log(response)
         this.pacientes = response.data.patients;
       }).catch(error => {
           console.log("Error cargando pacientes", error);
@@ -201,6 +240,25 @@ export default {
     },
     openNewPatientForm() {
       this.newPatients = true;
+    },
+    openContactDrawer(paciente) {
+      this.currentPaciente = paciente;
+      this.contactos = [];
+      this.$nextTick(() => {
+        this.showContactDrawer = true;
+        this.loadContacts();        
+      });
+    },
+    loadContacts() {
+      this.contactsLoading = true;
+      contactsApi.getContacts(this.currentPaciente.id).then(response => {
+        console.log(response)
+        this.contactos = response.data.contacts;
+      }).catch(error => {
+        console.log("error cargando contactos", error);
+      }).finally(() => {
+        this.contactsLoading = false;
+      });
     },
     openEditPacienteModal(paciente) {
       this.copyPaciente = clone(paciente)
@@ -229,6 +287,9 @@ export default {
     getFullName(paciente) {
       return `${paciente.firstname} ${paciente.lastname}`;
     },
+    closeModalPaciente() {
+      this.showClosePacienteModal = false;
+    },
     closeModal() {
       this.showOpenContactModal = false;
       this.contacto = {
@@ -250,34 +311,65 @@ export default {
     saveContact() {
       this.contacto.paciente_id = this.currentPaciente.id;
       this.loading = true;
-        this.$refs.clinicasForm.validate((valid) => {
-          if (valid) 
-      contactApi.createContact(this.currentPaciente.id, this.contacto).then(response => {
-        // this.currentPaciente.contacts.push(response.data.contact);
-        this.showOpenContactModal = false;
-        this.contacto = {
-          paciente_id: "",
-          firstname: "",
-          lastname: "",
-          phone: "",
-          document_number: "",
-          relationship: ""
+      this.$refs.clinicasForm.validate((valid) => {
+        if (valid) { 
+          contactsApi.createContact(this.currentPaciente.id, this.contacto)
+            .then(response => {
+              // this.currentPaciente.contacts.push(response.data.contact);
+              this.showOpenContactModal = false;
+              this.contacto = {
+                paciente_id: "",
+                firstname: "",
+                lastname: "",
+                phone: "",
+                document_number: "",
+                relationship: ""
+              }
+              this.$message({
+                message: 'El contacto se a guardado con exito',
+                type: 'success'
+              });
+            })
+            .catch(error => {
+              console.log(error);
+              this.$message({
+                message: 'Hubo un error al guardar el contacto',
+                type: 'error'
+              });
+            })
+            .finally(() => {
+              this.showOpenContactModal = false;
+            });
         }
-        this.$message({
-              message: 'El contacto se a guardado con exito',
-              type: 'success'
-            });
-        });
-          }).catch(error => {
-            console.log(error);
-            this.$message({
-              message: 'Hubo un error al guardar el contacto',
-              type: 'error'
-            });
-          }).finally(() => {
-            this.showOpenContactModal = false;
-          });
-      }
+      });
     }
-  };
+  }
+};
 </script>
+
+<style lang="scss">
+.el-drawer__body {
+  overflow-y: scroll;
+}
+.contacto {
+  border-bottom: solid 1px #888;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  .contact-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 1.1em;
+    .label {
+      flex: 2;
+      padding: 5px 0px;
+      font-weight: bold;
+    }
+    .value { 
+      border-bottom: dashed #ddd 1px;
+      flex: 3;
+      padding: 5px 10px;
+    }
+  }
+}
+</style>
