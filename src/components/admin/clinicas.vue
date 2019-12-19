@@ -4,7 +4,7 @@
       <div class="main-title">Clinicas</div>
       <div>
         <el-button type="primary" size="small" @click="openModal()" icon="el-icon-office-building">Ingresar clinica</el-button>
-        <el-button type="primary" size="small" @click="loadClinicas()" icon="el-icon-loading">Recargar</el-button>
+        <el-button type="primary" size="small" @click="loadClinicas()" icon="el-icon-refresh-right">Recargar</el-button>
       </div>
     </el-header>
     <el-main style="margin-bottom: 40px;">
@@ -48,7 +48,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="entryVisible = false">Cancelar</el-button>
+        <el-button @click="closeClinic()">Cancelar</el-button>
         <el-button type="primary" @click="saveEntry()">Guardar</el-button>
       </span>
     </el-dialog>
@@ -64,6 +64,7 @@ export default {
             visible: false,
             clinicas: [],
             loading: false,
+            ShowCloseModal: false,
             num: 1,
             newEntry: {
                 name: "",
@@ -107,6 +108,9 @@ export default {
       },
       openModal() {
           this.visible = true;
+      },
+      closeClinic() {
+        this.visible = false;
       },
       saveEntry() {
         this.loading = true;

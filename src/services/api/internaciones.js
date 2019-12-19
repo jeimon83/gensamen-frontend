@@ -56,10 +56,20 @@ async function updateInternacion(id, data) {
 	}
 }
 
+async function closeInternacion(id) {
+	try {
+		const response = await axios.post(`/internments/${id}/close`, {});
+		return response;
+	} catch (error) {
+		throw error;
+	}
+}
+
 export default {
 	getInternacionesClinica,
 	getInternacionesPaciente,
 	getInternacion,
 	createInternacion,
-	updateInternacion
+	updateInternacion,
+	closeInternacion
 }

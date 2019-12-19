@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import asesoramientosApi from '@/services/api/asesoramientos';
+
 	export default {
      props: {
         itemType: {
@@ -63,33 +65,44 @@
       confirmClose() {
         this.showPanel = false;
       },
+      handleClick(tab) {
+      console.log(tab);
+      if (this.activeName == "second") {
+        this.getAsesoramiento()
+      } else {
+        this.reporte = {
+          type: "",
+          expiration_date: new Date()
+        }
+      }
+    },
+      getAsesoramiento() {
+      asesoramientosApi.getAsesoramiento(this.item.id).then(response => {
+        this.asesoramiento = response.data.asesoramiento
+      })
+    },
       guardarAsesoramiento() {
       	this.loading = true;
-        this.$refs.loginForm.validate((valid) => {
-          if (valid) {
-            this.reporte.item_id = this.item.id;
-            this.reporte.item_type = this.item.type;
-            pacientesApi.guardarAsesoramiento(this.paciente.id, this.asesoramiento)
-              .then(response => {
-                console.log("Update asesoramiento response", response);
-                this.$message({
-                  message: 'El asesoramiento se guardado con exito',
-                  type: 'success'
-                });
-              })
-              .catch(error => {
-                console.log(error);
-                this.$message({
-                  message: 'Hubo un error al guardar el sesoramiento',
-                  type: 'error'
-                });
-              })
-              .finally(() => {
-                this.loading = false;
-              });
-          }
-  		  })
-      }
+        this.asesoramiento.type = new Date();
+        this.asesoramiento.internment_id = this.item.id;
+        asesoramientosApi.createAsesoramientos(this.item.id, this.asesoramiento)
+      .then(response => {
+        this.asesoramiento.push(response.data.asesoramiento);
+        this.$message({
+          message: 'El asesoramiento se creo con exito',
+          type: 'success'
+        });
+      })
+      .catch(error => {
+        this.$message({
+          message: 'Hubo un error al crear El asesoramiento',
+          type: 'error'
+        });
+      })
+      .finally(() => {
+        this.activeName = "second";
+      });
+    }
     }
 	};
 </script>

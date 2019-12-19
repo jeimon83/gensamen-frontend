@@ -2,7 +2,7 @@
   <div v-loading="loading">
     <el-header>
       <div><a @click="goBack()"><i class="el-icon-back"></i></a>Pacientes</div>
-      <el-button type="primary" @click="openNewPatientForm()">Nuevo Paciente</el-button>
+      <el-button type="primary" @click="openNewPatientForm()" icon="el-icon-user">Nuevo Paciente</el-button>
     </el-header>
     <el-main>
       <el-table :data="pacientes" style="width: 100%">
@@ -32,7 +32,7 @@
       <div slot="title">
         Contactos
         <el-button size="small" type="primary" style="float: right;"
-            @click="openContactModal(currentPaciente)">Nuevo Contacto</el-button>
+            @click="openContactModal(currentPaciente)" icon="el-icon-s-custom">Nuevo Contacto</el-button>
       </div>
       <div style="padding: 0px 20px 20px">
         <div v-for="contacto in contactos" :key="contacto.id" class="contacto">
@@ -63,7 +63,8 @@
     <el-dialog 
       title="Actualizar Paciente" 
       :visible.sync="showPaciente" 
-      :show-close="false" 
+      :show-close="false"
+      top="10px"
       :close-on-press-escape="false" 
       :close-on-click-modal="false">
         <el-form :model="copyPaciente" label-position="top" ref="informeForm" :rules="rulesPatient">
@@ -101,6 +102,7 @@
       title="Nuevo Contacto"
       :visible.sync="showOpenContactModal"
       :show-close="false"
+      top="10px"
       :close-on-press-escape="false"
       :close-on-click-modal="false">
       <el-form :model="contacto" label-width="120px" ref="clinicasForm" :rules="rulesContact">
@@ -288,7 +290,7 @@ export default {
       return `${paciente.firstname} ${paciente.lastname}`;
     },
     closeModalPaciente() {
-      this.showClosePacienteModal = false;
+      this.showPaciente = false;
     },
     closeModal() {
       this.showOpenContactModal = false;
