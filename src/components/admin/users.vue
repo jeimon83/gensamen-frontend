@@ -12,29 +12,52 @@
       </div>
     </el-header>
 
-    <el-dialog title="nuevo usuario" :visible.sync="visible">
-      <el-form :model="user" ref="usersForm" :rules="rules" label-width="200px">
-        <el-form-item label="Nombre" prop="name">
-          <el-input v-model="user.name"></el-input>
-        </el-form-item>
-        <el-form-item label="Email" prop="email">
-          <el-input v-model="user.email"></el-input>
-        </el-form-item>
-        <el-form-item label="Rol">
-          <el-select placeholder="Rol" style="width: 100%" v-model="user.role" prop="role">
-            <el-option v-for="role in roles" :key="role.value" :label="role.label" :value="role.value"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="user.role" label="Clinica">
-          <el-select placeholder="Clinica" style="width: 100%" :disabled="disableClinic" v-model="user.clinic_id">
-            <el-option v-for="clinica in clinicas" :key="clinica.id" :label="clinica.name" :value="clinica.id"/>
-          </el-select>
-        </el-form-item>
-        {{ user }}
-      </el-form>
+    <el-dialog
+      title="Ingresar nuevo Usuario"
+      :visible.sync="visible"
+      top="60px"
+      width="50%">
+      <div v-loading="loadingNewUser">
+        <el-form :model="user" ref="usersForm" :rules="rules">      
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="Nombre" prop="name">
+                <el-input placeholder="nombre completo" v-model="user.name"></el-input>
+              </el-form-item>
+              <el-form-item label="Email" prop="email">
+                <el-input placeholder="email" v-model="user.email"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="Contraseña" prop="password">
+                <el-input type="password" placeholder="Contraseña" v-model="user.password"/>
+              </el-form-item>
+              <el-form-item label="Confimar Contraseña" prop="password_confirmation">
+                <el-input type="password" placeholder="Confimar Contraseña" v-model="user.password_confirmation"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <el-form-item label="Rol" prop="role">
+                <el-select placeholder="Rol" style="width: 100%" v-model="user.role" prop="role">
+                  <el-option v-for="role in roles" :key="role.value" :label="role.label" :value="role.value"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="16">
+              <el-form-item label="Clinica" prop="clinic_id">
+                <el-select placeholder="Clinica" style="width: 100%" :disabled="disableClinic" v-model="user.clinic_id">
+                  <el-option v-for="clinica in clinicas" :key="clinica.id" :label="clinica.name" :value="clinica.id"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="entryVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="saveUser()">Guardar</el-button>
+        <el-button @click="closeForm()">Cancelar</el-button>
+        <el-button type="primary" @click="saveUser()" :disabled="loadingNewUser">Guardar</el-button>
       </span>
     </el-dialog>
 
@@ -75,42 +98,68 @@ import clinicasApi from "@/services/api/clinicas";
 export default {
 	name: 'AdminApp',
 	data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === '' || value == null || value == undefined) {
+        callback(new Error('La contraseña no puede estar en blanco'));
+      } else {
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '' || value == null || value == undefined) {
+        callback(new Error('La contraseña no puede estar en blanco'));
+      } else if (value !== this.user.password) {
+        callback(new Error('El password no coincide!'));
+      } else {
+        callback();
+      }
+    };
+
+    var checkClinic = (rule, value, callback) => {
+      if (this.user.role === 'admin') {
+        callback()
+      } else {
+        if (this.user.clinic_id == null)
+          callback(new Error('La clinica no puede estar en blanco'));
+      }
+    }
 		return {
 			users: [],
       loading: false,
+      loadingNewUser: false,
       visible: false,
       clinicas: [],
-      disableClinic: false,
+      disableClinic: true,
       roles: [
         { label: "Administrador", value: "admin" },
         { label: "Operador", value: "studio_op" },
         { label: "Operador de clinica", value: "clinic_op" }
       ],
-      user: {
-        name: "",
-        email: "",
-        clinic_id: "",
-        role: ""
-      },
+      user: { name: null, email: null, clinic_id: null, role: null, password: null, password_confirmation: null },
       rules: {
         name: [
-          { required: true, message: 'Nombre no valido', trigger: 'blur' },
+          { required: true, message: 'Nombre no puede estar en blanco', trigger: 'blur' },
         ],
         email: [
-          { required: true, message: 'Email no valido', trigger: 'blur'}
+          { required: true, message: 'Email no puede estar en blanco', trigger: 'blur'}
         ],
-        Clinica: [
-          { required: true, message: 'Clinica no valida', trigger: 'blur' }
+        clinic_id: [
+          { required: true, validator: checkClinic, trigger: 'blur' }
         ],
         role: [
-          { required: true, message: 'role no valida', trigger: 'blur' }
+          { required: true, message: 'El role no puede estar en blanco', trigger: 'blur' }
         ],
+        password: [
+          { required: true, message: 'La contraseña no puede estar en blanco', validator: validatePass, trigger: 'blur' }
+        ],
+        password_confirmation: [
+          { required: true, message: 'La contraseña no puede estar en blanco', validator: validatePass2, trigger: 'blur' }
+        ]
       }
 		}
 	},
   watch: {
     'user.role': function(newValue, oldValue) {
-      console.log(oldValue, newValue)
       if (newValue === 'admin') {
         this.user.clinic_id = null;
         this.disableClinic = true
@@ -128,7 +177,7 @@ export default {
   methods: {
   	loadUsers() {
       this.loading = true;
-      usersApi.getUsers(this.users).then(response => {
+      usersApi.getUsers().then(response => {
         this.users = response.data.users;
       }).catch(error => {
         console.log("Error cargando usuario", error);
@@ -149,39 +198,31 @@ export default {
         this.loadingClinicas = false;
       })
     },
+    closeForm() {
+      this.visible = false;
+      this.loadingNewUser = false;
+      this.user = { name: null, email: null, clinic_id: null, role: null, password: null, password_confirmation: null };
+    },
     saveUser() {
-      this.loading = true;
-      this.$refs.usersForm.validate((valid) => {
-        if (valid) {
-          usersApi.createUsers(this.user)
-            .then(response => {
-              this.user.push(response.data.users);
-              this.$message({
-                message: 'El usuario se a guardado con exito',
-                type: 'success'
-              });
-              this.visible = false;
-              this.user = {
-                name: "",
-                email: "",
-                Clinica: "",
-                role: "",
-              };
-            })
-            .catch(error => {
-              console.log(error)
-              this.$message({
-                message: 'Hubo un error al guardar El usuario',
-                type: 'error'
-              });
-            })
-            .finally(() => {
-              this.loading = false
-            })
-        } else {
-          return false;
-        }
-      });
+      this.loadingNewUser = true;
+      usersApi.createUsers(this.user)
+        .then(response => {
+          this.user.push(response.data.users);
+          this.$message({
+            message: 'El usuario se a guardado con exito',
+            type: 'success'
+          });
+          this.closeForm();
+        })
+        .catch(error => {
+          this.$message({
+            message: 'Hubo un error al guardar El usuario',
+            type: 'error'
+          });
+        })
+        .finally(() => {
+          this.loadingNewUser = false
+        })
     }
   }
 };

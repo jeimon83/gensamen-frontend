@@ -32,10 +32,10 @@ html, body {
   border-right: solid 1px #ccc;
 }
 .el-header.menu-header {
-  background: #f1f4f8;
+  background: #f4f4f4;
 }
 .el-header, .el-footer {
-  background: #f1f4f8;
+  background: #f4f4f4;
   display: flex;
   align-items: center;
   height: 50px;
@@ -55,9 +55,18 @@ ul.el-menu {
   display: flex !important;
   justify-content: space-between;
   padding: 10px 0px;
+  .main-title {
+  font-size: 1.2em;
+}
 }
 /* Global styles */
-.main-title {
-  font-size: 1em;
+.menu-header {
+  .main-title {
+    font-size: 1.2em;
+    font-weight: 444;
+    color: #555;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
 }
 </style>

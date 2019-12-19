@@ -5,8 +5,11 @@
         <router-link :to="{ name: 'Users' }" class="main-title">Gensamen</router-link>
       </el-header>
       <div class="user">
-      	<router-link :to="{ name: 'UserProfile' }"><div class="userData">{{ user.first_name }} {{ user.last_name }}</div></router-link>
+      	<router-link :to="{ name: 'UserProfile' }" class="userData">
+          <i class="el-icon-user"></i> {{ user.first_name }} {{ user.last_name }}
+        </router-link>
       	<p class="userEmail">{{ user.email }}</p>
+        <p class="userEmail"><span><b>Rol:</b> {{ user.role }}</span></p>
       </div>
       <el-menu>
         <el-menu-item>
@@ -82,10 +85,11 @@ export default {
 }
 .user {
 	padding: 20px;
-	background: #f9f9f9;
+	background: #f1f1f1;
 	.userData {
 		font-size: 1em;
-		color: #409EFF; 
+		color: #409EFF;
+    text-decoration: none;
 	}
 	.userEmail {
 		font-size: 0.8em;

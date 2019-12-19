@@ -11,6 +11,15 @@ async function updateUser(data) {
 	}
 }
 
+async function createUsers(data) {
+	try {
+		const response = await axios.post(`/users`, { user: data })
+		return response;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 async function getUsers() {
 	try {
 		const response = await axios.get(`/users`)
@@ -22,5 +31,6 @@ async function getUsers() {
 
 export default {
 	updateUser,
-	getUsers
+	getUsers,
+	createUsers
 }

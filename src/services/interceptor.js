@@ -22,7 +22,7 @@ export default function setup() {
       return Promise.resolve(response);
     },
     error => {
-      console.log($route.matched.some(({ name }) => name === 'login'))
+      console.log(this.$route.matched.some(({ name }) => name === 'login'))
       if (error.response.status === 401) {
         router.push("/login");
       }

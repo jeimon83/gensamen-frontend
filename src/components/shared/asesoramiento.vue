@@ -96,7 +96,7 @@
 
 <style>
   .panel-content {
-    padding: 10px;
+    padding: 20px;
   }
   .el-drawer__header {
     font-size: 1.25em !important;

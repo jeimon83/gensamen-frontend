@@ -4,10 +4,6 @@
       <div class="main-title">
         <a @click="goBack()"><i class="el-icon-back"></i></a>Paciente {{ paciente.firstname }} {{ paciente.lastname }}</a>
       </div>
-      <div>
-        <el-button type="primary" size="small" @click="openModalReporte()" icon="el-icon-document">Solicitar Reporte</el-button>
-        <el-button type="primary" size="small" @click="openModalAsesoramientos()" icon="el-icon-chat-line-round">Solicitar asesoramientos</el-button>
-      </div>
     </el-header>
     <el-main>
       <div class="patient-row">
@@ -56,37 +52,17 @@
         </el-col>
       </el-row>
     </el-main>
-  
-    <reporte 
-      v-if="paciente.id"
-      :item="paciente"
-      ref="reportePanel"
-      item-type="paciente"/>
-
-    <asesoramiento
-      v-if="paciente.id"
-      ref="asesoramientoPanel"
-      :item="paciente"
-      item-type="Patient"/>
   </div>
 </template>
 <script>
 import pacientesApi from '@/services/api/pacientes';
 import internacionesApi from '@/services/api/internaciones';
 
-import asesoramiento from '@/components/shared/asesoramiento';
-import reporte from '@/components/shared/reporte';
-
 export default {
     name: "paciente",
-    components: {
-      reporte, asesoramiento
-    },
     data() {
       return {
         loading: false,
-        showInternacion: false,
-        showReporte: false,
         internaciones: [],
         contactos: [],
         paciente: {
@@ -97,11 +73,11 @@ export default {
           birth_date: ""
         },
         pacienteId: null,
-        Internacion: {
+        internacion: {
           type: "",
           end_date: "",
           begin_date: ""
-      },
+        }
       }
     },
     created() {
@@ -139,14 +115,7 @@ export default {
         this.loadInternaciones();
       }
     },
-    openModalReporte() {
-      this.$refs.reportePanel.openPanel();
-    },
-    openModalAsesoramientos() {
-      this.$refs.asesoramientoPanel.openPanel();
-    },
     addContact(contacto) {
-      console.log(contacto);
       this.paciente = {};
     }
   }

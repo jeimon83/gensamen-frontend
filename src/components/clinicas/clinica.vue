@@ -1,7 +1,10 @@
 <template>
   <div class="container-wrapper" v-loading="loading">
     <el-header>
-      <div class="main-title"><a @click="goBack()"><i class="el-icon-back"></i></a> Clinica {{ clinica.name }}</div>
+      <div class="main-title">
+        <a @click="goBack()"><i class="el-icon-back"></i></a>
+        {{ clinica.name }}
+      </div>
       <div class="main-controls">
         <router-link
           class="el-button el-button--default el-button--small"
@@ -12,14 +15,14 @@
         <router-link 
           class="el-button el-button--default el-button--small"
           style="text-decoration: none;" 
-          :to="{ name: 'ClinicaInternaciones', params: { id: clinica.id } }">internaciones
+          :to="{ name: 'ClinicaInternaciones', params: { id: clinica.id } }">
+          Ver Internaciones
         </router-link>
-        <el-button type="danger" @click="openClinicaModal()" size="small" icon="el-icon-edit-outline">Actualizar clinica</el-button>
       </div>
     </el-header>
     <el-main style="margin-bottom: 40px;">
       <el-row :gutter="20">
-        <el-col :span="16">
+        <el-col :span="20">
           <div class="clinic-row">
             <div class="label">CUIT</div>
             <div class="value">{{ clinica.cuit }} </div>
@@ -37,24 +40,36 @@
             <div class="value">{{ clinica.beds_voluntary }} </div>
           </div>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="4">
           <div style="text-align: right;">
             <div>
-              <div>
-                <el-button 
-                type="primary" 
+              <el-button 
+                type="primary"
+                style="width: 100%"
                 @click="openInternacionModal()" 
                 size="small" 
                 icon="el-icon-user">Ingresar Paciente
               </el-button>
-              </div>
-              <br>
+            </div>
+            <br>
+            <div>
               <el-button
                 type="primary"
-                style="width: 70%"
+                style="width: 100%"
                 @click="openModalAsesoramientos()"
                 icon="el-icon-chat-line-round"
-                size="mini">Solicitar asesoramientos
+                size="mini">Asesoramientos
+              </el-button>
+            </div>
+            <br>
+            <div>
+              <el-button
+                type="danger"
+                style="width: 100%"
+                @click="openClinicaModal()"
+                icon="el-icon-edit-outline"
+                size="small">
+                Actualizar clinica
               </el-button>
             </div>
           </div>
@@ -74,11 +89,8 @@
         <el-table-column>
           <template slot-scope="scope">
             <router-link :to="{ name: 'Internacion', params: { id: clinicaId, internacion_id: scope.row.id } }" style="color: blue;">
-              ver
+              Ver detalles
             </router-link>
-            <br>
-            <a @click="openEditInternacionModal(scope.row)" style="color: green;">actualizar</a><br>
-            <a @click="openNewContactModal(scope.row)" style="color: blue;">nuevo contacto</a>
           </template>
         </el-table-column>
       </el-table>
@@ -89,42 +101,34 @@
       	:show-close="false"
       	:close-on-press-escape="false"
       	:close-on-click-modal="false">
-          <el-form :model="editClinic" label-width="120px" ref="pacienteForm" :rules="rulesClinic">
-              <el-form-item label="Nombre" prop="name">
-                  <el-input v-model="editClinic.name"></el-input>
-              </el-form-item>
-              <el-form-item label="cuit" prop="cuit">
-                  <el-input v-model="editClinic.cuit"></el-input>
-              </el-form-item>
-              <el-form-item label="Permiso" prop="habilitation">
-                  <el-input v-model="editClinic.habilitation"></el-input>
-              </el-form-item>
-              <el-form-item label="Camas disponibles (voluntario)">
-                  <el-input-number v-model="editClinic.beds_voluntary" :min="1" :max="500"></el-input-number>
-              </el-form-item>
-              <el-form-item label="Camas disponibles (judicial)">
-                  <el-input-number v-model="editClinic.beds_judicial" :min="1" :max="500"></el-input-number>
-              </el-form-item>
-          </el-form>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="closeClinicModal()">Cancelar</el-button>
-            <el-button type="primary" @click="saveClinic()">Guardar</el-button>
-          </span>
+        <el-form :model="editClinic" label-width="230px" ref="pacienteForm" :rules="rulesClinic">
+          <el-form-item label="Nombre" prop="name">
+            <el-input v-model="editClinic.name"></el-input>
+          </el-form-item>
+          <el-form-item label="cuit" prop="cuit">
+            <el-input v-model="editClinic.cuit"></el-input>
+          </el-form-item>
+          <el-form-item label="Permiso" prop="habilitation">
+            <el-input v-model="editClinic.habilitation"></el-input>
+          </el-form-item>
+          <el-form-item label="Camas disponibles (voluntario)">
+            <el-input-number v-model="editClinic.beds_voluntary" size="small" :min="1" :max="500"></el-input-number>
+          </el-form-item>
+          <el-form-item label="Camas disponibles (judicial)">
+            <el-input-number v-model="editClinic.beds_judicial" size="small" :min="1" :max="500"></el-input-number>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeClinicModal()">Cancelar</el-button>
+          <el-button type="primary" @click="saveClinic()">Guardar</el-button>
+        </span>
       </el-dialog>
       
       <nueva-internacion
       	v-if="clinica.id"
+        ref="newInternacionRef"
       	:clinica-id="clinica.id"
-      	:open-form="showInternacionModal"
-      	@close="showInternacionModal = false"
       	@finish="(data) => addInternacion(data)"/>
-
-      <nuevo-contacto
-        v-if="paciente.id"
-        :paciente-id="paciente.id"
-        :open-form="showNewContactModal"
-        @close="showNewContactModal = false"
-        @finish="(data) => addContact(data)"/>
 
       <reporte
          v-if="clinica.id"
@@ -132,7 +136,7 @@
          :item="clinica"
          item-type="Clinic"/>
 
-       <asesoramiento
+      <asesoramiento
          v-if="clinica.id"
          ref="asesoramientoPanel"
          :item="clinica"
@@ -144,43 +148,6 @@
         :open-form="showInformeModal"
         @close="showInformeModal = false"
         @finish="(data) => addInforme(data)"/> -->
-      
-      <el-dialog 
-        title="Actualizar Internacion"
-        :visible.sync="showInternacion"
-        :show-close="false"
-        :close-on-press-escape="false"
-        :close-on-click-modal="false">
-        <el-form :model="copyInternacion" label-width="120px" ref="pacienteForm" :rules="rulesInternacion">
-          <el-form-item label="Tipo" prop="type">
-            <el-input v-model="copyInternacion.type" disabled readonly/>
-          </el-form-item>
-          <el-form-item label="Inicio" prop="begin_date">
-            <el-date-picker
-              v-model="copyInternacion.begin_date"
-              type="date"
-              style="width: 100%;"
-              placeholder="Seleccione fecha de ingreso"
-              format="dd/MM/yyyy"
-              value-format="MM/dd/yyyy">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="Fin Internacion" prop="end_date">
-            <el-date-picker
-              v-model="copyInternacion.end_date"
-              type="date"
-              style="width: 100%;"
-              placeholder="Seleccione fecha de egreso"
-              format="dd/MM/yyyy"
-              value-format="MM/dd/yyyy">
-            </el-date-picker>
-          </el-form-item>    
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="cancelEditInternacion()">Cancelar</el-button>
-          <el-button type="primary" @click="updateInternacion()">Guardar</el-button>
-        </span>
-      </el-dialog>
     </el-main>
 	</div>
 </template>
@@ -204,7 +171,6 @@ export default {
       showInternacionModal: false,
       showInternaciones: false,
       showVerPacientes: false,
-      showInternacion: false,
       showNewContactModal: false,
       loading: false,
       clinica: {
@@ -223,35 +189,18 @@ export default {
           beds_voluntary: ""
       },
       internaciones: [],
-      copyInternacion: {
-        id: "",
-        type: "",
-        end_date: "",
-        begin_date: ""
-      },
       paciente: {},
-        rulesClinic: {
-            name: [
-              { required: true, message: 'El Nombre no puede estar en blanco', trigger: 'blur' },
-            ],
-            cuit: [
-              { required: true, message: 'El Apellido no puede estar en blanco', trigger: 'blur'}
-            ],
-            habilitation: [
-              { required: true, message: 'El DNI no es valido', trigger: 'blur' }
-            ]
-        },
-        rulesInternacion: {
-            type: [
-              { required: true, message: 'tipo no valido', trigger: 'blur' },
-            ],
-            begin_date: [
-              { required: true, message: 'elige una fecha', trigger: 'blur'}
-            ],
-            end_date: [
-              { required: true, message: 'elige una fecha', trigger: 'blur' }
-            ]
-        }
+      rulesClinic: {
+        name: [
+          { required: true, message: 'El Nombre no puede estar en blanco', trigger: 'blur' },
+        ],
+        cuit: [
+          { required: true, message: 'El Apellido no puede estar en blanco', trigger: 'blur'}
+        ],
+        habilitation: [
+          { required: true, message: 'El DNI no es valido', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
@@ -273,10 +222,7 @@ export default {
       this.$refs.asesoramientoPanel.openPanel();
     },
     openInternacionModal() {
-      this.showInternacionModal = true;
-    },
-    openVerPacientes() {
-      this.showVerPacientes = true;
+      this.$refs.newInternacionRef.openDrawer();
     },
     openClinicaModal() {
       this.showClinicaModal = true;
@@ -308,14 +254,15 @@ export default {
             message: 'La clinica se actualizo con exito',
             type: 'success'
           });
-        }).catch(error => {
-          console.log(error);
+        })
+        .catch(error => {
           this.$message({
             message: 'Hubo un error al actualizar la clinica',
             type: 'error'
           });
-        }).finally(() => {
-          this.openClinicModal = false;
+        })
+        .finally(() => {
+          this.showClinicaModal = false;
         });
     },
     closeClinicModal() {
@@ -324,37 +271,19 @@ export default {
     },
     loadInternaciones() {
       this.loading = true;
-      internacionesApi.getInternacionesClinica(this.clinicaId).then(response => {
-        this.internaciones = response.data.internments;
-      }).catch(error => {
-          console.log("Error cargando internaciones", error);
-        }).finally(() => {
+      internacionesApi.getInternacionesClinica(this.clinicaId)
+        .then(response => {
+          this.internaciones = response.data.internments;
+        })
+        .catch(error => {
+          this.$message({
+            message: 'Hubo un error al actualizar la clinica',
+            type: 'error'
+          });
+        })
+        .finally(() => {
           this.loading = false;
-          })
-    },
-    openEditInternacionModal(internacion) {
-      this.copyInternacion = clone(internacion)
-      this.showInternacion = true;
-    },
-    cancelEditInternacion() {
-      this.copyInternacion = {
-        type: "",
-        end_date: "",
-        begin_date: ""
-      }
-      this.showInternacion = false;
-    },
-    updateInternacion() {
-      let internacionId = clone(this.copyInternacion.id);
-      this.copyInternacion.begin_date = new Date(this.copyInternacion.begin_date);
-      this.copyInternacion.end_date = new Date(this.copyInternacion.end_date);
-        
-      delete this.copyInternacion.id;
-      internacionesApi.updateInternacion(internacionId, this.copyInternacion).then(response => {
-        console.log("Update internacion response", response);
-        this.loadInternaciones();
-        this.showInternacion = false;
-      })
+        })
     },
     addContact(contacto) {
       console.log(contacto);
