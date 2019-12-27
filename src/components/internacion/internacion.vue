@@ -71,7 +71,7 @@
         v-if="internacion.id"
         ref="asesoramientoPanel"
         :item="internacion"
-        item-type="Internment"/>
+        item-type="internacion"/>
 
       <el-dialog 
         v-if="copyInternacion"

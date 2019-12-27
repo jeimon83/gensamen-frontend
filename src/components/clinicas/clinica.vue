@@ -140,7 +140,7 @@
          v-if="clinica.id"
          ref="asesoramientoPanel"
          :item="clinica"
-         item-type="Clinic"/>
+         item-type="clinica"/>
 
       <!-- <nuevo-informe
         v-if="clinica.id"
