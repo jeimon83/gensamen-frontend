@@ -1,4 +1,5 @@
 <template>
+  <div>
 	<el-drawer
 		:visible.sync="showPanel"
     :width-header="true"
@@ -7,20 +8,18 @@
     <div slot="title">Asesoramientos</div>
     <div class="panel-content">
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="Nuevo Reporte" name="first">
+        <el-tab-pane label="Nuevo Asesoramiento" name="first">
           <el-form :model="asesoramiento" :rules="rules" ref="helpForm">
-          	<el-form-item label="tipo de asesoramiento" prop="type">
-              <el-select v-model="asesoramiento.type" style="width: 100%;" placeholder="seleccionar tipo">
-                <el-option label="a" value="a"></el-option>
-                <el-option label="b" value="b"></el-option>
-            	</el-select>
+          	<el-form-item label="Titulo" prop="title">
+              <el-input v-model="asesoramiento.title" placeholder="Titulo">
+            	</el-input>
           	</el-form-item>
           	<el-form-item>
           		<el-input
       				  type="textarea"
-      				  :rows="2"
-      				  placeholder="comentarios"
-      				  v-model="asesoramiento.comentario">
+      				  :rows="4"
+      				  placeholder="Descripcion"
+      				  v-model="asesoramiento.description">
       				</el-input>
           	</el-form-item>
             <el-form-item>
@@ -30,12 +29,12 @@
         </el-tab-pane>
         <el-tab-pane label="Asesoramientos solicitados" name="second">
           <el-table :data="asesoramientos" style="width: 100%;" v-loading="loading">
-            <el-table-column label="#" width="60" prop="id"></el-table-column>
-            <el-table-column label="Tipo" prop="type"></el-table-column>
+            <el-table-column label="Titulo" prop="title"></el-table-column>
+            <el-table-column label="Descripcion" prop="description"></el-table-column>
             <el-table-column label="Creado" prop="requested_date"></el-table-column>
             <el-table-column>
               <template slot-scope="scope">
-                <el-button size="mini" type="primary" @click="sendAsesoramientos(scope.row)">Enviar Asesoramiento</el-button>
+                <el-button size="mini" type="primary" @click="openAsesoramiento(scope.row)">Ver Asesoramiento</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -43,6 +42,37 @@
       </el-tabs>
     </div>
   </el-drawer>
+
+  <el-drawer
+  title="Asesoramientos"
+  :visible.sync="showAsesoramiento"
+  :with-header="false"
+  :before-close="closeAsesoramiento">
+  <span>
+    <div class="clinic-row">
+      <div class="label">Titulo</div>
+      <div class="value">{{ asesoramiento.title }}</div>
+    </div>
+    <div class="clinic-row">
+      <div class="label">Creado</div>
+      <div class="value">{{ asesoramiento.requested_date }}</div>
+    </div>
+    <div class="clinic-row">
+      <div class="label">Internacion</div>
+      <div class="value">{{ asesoramiento.internment_id }}</div>
+    </div>
+    <div class="clinic-row">
+      <div class="label">Clinica</div>
+      <div class="value">{{ asesoramiento.clinic_id }}</div>
+    </div>
+    <div class="clinic-row">
+      <div class="label">Descripcion</div>
+      <div class="value">{{ asesoramiento.description }}</div>
+    </div>
+  </span>
+</el-drawer>
+
+</div>
 </template>
 
 <script>
@@ -63,21 +93,22 @@ import asesoramientosApi from '@/services/api/asesoramientos';
       return {
         showPanel: false,
         loading: false,
+        showAsesoramiento: false,
         asesoramientos: [],
         activeName: "first",
   			asesoramiento: {
-  				type: "",
+  				title: "",
           requested_date: "",
           internment_id: null,
           clinic_id: null,
-          comentarios: ""
+          description: ""
   			},
     		rules: {
-          type: [
-            { required: true, message: 'tipo no valido', trigger: 'change' },
+          title: [
+            { required: true, message: 'El titulo no puede estar en blanco', trigger: 'blur' },
           ],
-          expiration_date: [
-            { required: true, message: 'expiracion no puede estar en blanco', trigger: 'change' }
+          description: [
+            { required: true, message: 'La descripcion no puede estar en blanco', trigger: 'blur' }
           ]
         }
       };
@@ -92,7 +123,7 @@ import asesoramientosApi from '@/services/api/asesoramientos';
       },
       handleClick(tab) {
         if (this.activeName == "second") {
-          this.getAsesoramiento()
+          this.getAsesoramientos()
         } else {
           this.reporte = {
             type: "",
@@ -100,13 +131,13 @@ import asesoramientosApi from '@/services/api/asesoramientos';
           }
         }
       },
-      sendAsesoramientos(report) {
-        this.currentReport = report;
-        setTimeout(() => {
-          this.showFileModal = true;
-        }, 500)
+      openAsesoramiento() {
+        this.showAsesoramiento = true;
       },
-      getAsesoramiento() {
+      closeAsesoramiento() {
+        this.showAsesoramiento = false;
+      },
+      getAsesoramientos() {
         this.loading = true;
         if (this.itemType === 'clinica')
           asesoramientosApi.getAsesoramientosByClinica(this.item.id)
@@ -134,7 +165,14 @@ import asesoramientosApi from '@/services/api/asesoramientos';
         
         asesoramientosApi.createAsesoramiento(this.asesoramiento)
           .then(response => {
-            this.asesoramiento.push(response.data.asesoramientos);
+            this.asesoramientos.push(response.data.help_request);
+            this.asesoramiento = {
+              title: "",
+              requested_date: "",
+              internment_id: null,
+              clinic_id: null,
+              description: ""
+            }
             this.$message({
               message: 'El asesoramiento se creo con exito',
               type: 'success'
@@ -148,6 +186,7 @@ import asesoramientosApi from '@/services/api/asesoramientos';
           })
           .finally(() => {
             this.activeName = "second";
+            this.loading = false;
           });
       }
     }
