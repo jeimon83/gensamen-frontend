@@ -53,11 +53,10 @@ async function addComentAsesoramiento(data, asesoramientoId) {
   }
 }
 
-
 export default {
 	getAsesoramiento,
 	getAsesoramientosByInternacion,
 	getAsesoramientosByClinica,
 	createAsesoramiento,
-	addComentAsesoramiento
+  addComentAsesoramiento
 }

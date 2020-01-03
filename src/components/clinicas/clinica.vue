@@ -160,7 +160,7 @@ import internacionesApi from "@/services/api/internaciones";
 import nuevoInforme from "./nuevoInforme";
 import nuevoContacto from "@/components/pacientes/nuevoContacto";
 import reporte from "@/components/shared/reporte";
-import asesoramiento from "@/components/shared/asesoramiento"
+import asesoramiento from "@/components/shared/asesoramientosPanel"
 export default {
   name: "Clinica",
   components: { nuevaInternacion, nuevoInforme,nuevoContacto, reporte, asesoramiento },

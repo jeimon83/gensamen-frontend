@@ -22,7 +22,7 @@ export default {
 html, body {
   height: 100%;
   margin: 0px;
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Verdana', sans-serif;
 }
 
 .el-container, .container-wrapper {

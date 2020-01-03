@@ -112,7 +112,7 @@
 <script>
 import { clone } from 'lodash';
 import internacionesApi from '@/services/api/internaciones';
-import asesoramientos from '@/components/shared/asesoramiento';
+import asesoramientos from '@/components/shared/asesoramientosPanel';
 import reportes from '@/components/shared/reporte';
 
 import clinicasApi from "@/services/api/clinicas";
