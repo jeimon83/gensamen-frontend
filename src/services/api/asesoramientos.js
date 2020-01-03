@@ -45,7 +45,7 @@ async function createAsesoramiento(data) {
 
 async function addComentAsesoramiento(data, asesoramientoId) {
   try {
-	const response = await axios.post(`/help_requests/${asesoramientoId}/comments`, { comment: data });
+		const response = await axios.post(`/help_requests/${asesoramientoId}/comments`, { comment: data });
     return response;
   } catch (error) {
     console.error(error);

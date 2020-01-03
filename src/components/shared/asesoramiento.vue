@@ -46,30 +46,48 @@
   <el-drawer
   title="Asesoramientos"
   :visible.sync="showAsesoramiento"
-  :with-header="false"
-  :before-close="closeAsesoramiento">
-  <span>
-    <div class="clinic-row">
-      <div class="label">Titulo</div>
-      <div class="value">{{ asesoramiento.title }}</div>
+  :with-header="true"
+  :before-close="closeAsesoramiento"
+  size="50%">
+  <div slot="title">Asesoramiento {{ current.id }}</div>
+  <div class="panel-content">
+    <div>
+      <div class="clinic-row">
+        <div class="label">Titulo</div>
+        <div class="value">{{ current.title }}</div>
+      </div>
+      <div class="clinic-row">
+        <div class="label">Creado</div>
+        <div class="value">{{ current.requested_date }}</div>
+      </div>
+      <div class="clinic-row">
+        <div class="label">Internacion</div>
+        <div class="value">{{ current.internment.type }} {{ current.internment.id }}</div>
+      </div>
+      <div class="clinic-row">
+        <div class="label">Clinica</div>
+        <div class="value">{{ current.internment.clinic.name }}</div>
+      </div>
+      <div class="clinic-row">
+        <div class="label">Descripcion</div>
+        <div class="value">{{ current.description }}</div>
+      </div>
     </div>
-    <div class="clinic-row">
-      <div class="label">Creado</div>
-      <div class="value">{{ asesoramiento.requested_date }}</div>
+    <div>
+      <h3>Comentarios ({{ current.comments.length }})</h3>
+      <el-input placeholder="Nuevo comentario" v-model="newComment.body">
+        <el-button slot="append" icon="el-icon-edit" @click="crearComentario"></el-button>
+      </el-input>
+      <ul>
+        <li v-for="comment in current.comments" :key="comment.id">
+          <div>{{ comment.body }}</div>
+          <small>
+            {{ comment.comment_date }} - {{ comment.user_id }}
+          </small>
+        </li>
+      </ul>
     </div>
-    <div class="clinic-row">
-      <div class="label">Internacion</div>
-      <div class="value">{{ asesoramiento.internment_id }}</div>
-    </div>
-    <div class="clinic-row">
-      <div class="label">Clinica</div>
-      <div class="value">{{ asesoramiento.clinic_id }}</div>
-    </div>
-    <div class="clinic-row">
-      <div class="label">Descripcion</div>
-      <div class="value">{{ asesoramiento.description }}</div>
-    </div>
-  </span>
+  </div>
 </el-drawer>
 
 </div>
@@ -94,8 +112,17 @@ import asesoramientosApi from '@/services/api/asesoramientos';
         showPanel: false,
         loading: false,
         showAsesoramiento: false,
+        newComment: {
+          body: ""
+        },
         asesoramientos: [],
         activeName: "first",
+        current: {
+          internment: {
+            clinic: {}
+          },
+          comments: []
+        },
   			asesoramiento: {
   				title: "",
           requested_date: "",
@@ -131,11 +158,28 @@ import asesoramientosApi from '@/services/api/asesoramientos';
           }
         }
       },
-      openAsesoramiento() {
+      crearComentario() {
+        this.newComment.comment_date = new Date();
+        asesoramientosApi.addComentAsesoramiento(this.newComment, this.current.id)
+          .then(response => {
+            console.log(response.data)
+            this.current.comments.push(response.data.comment);
+            this.newComment.body = "";
+          })
+      },
+      openAsesoramiento(data) {
+        console.log(data);
+        this.current = data;
         this.showAsesoramiento = true;
       },
       closeAsesoramiento() {
         this.showAsesoramiento = false;
+        this.current = {
+          internment: {
+            clinic: {}
+          },
+          comments: []
+        };
       },
       getAsesoramientos() {
         this.loading = true;
